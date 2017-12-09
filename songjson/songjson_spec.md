@@ -22,7 +22,7 @@ For lines with chords to be valid, they must be followed by a line with lyrics t
 
 If there is a line that contains nothing or only white-space, that is interpreted as the beginning of a new page in the section. If the lyrics value contains no sections, anonymous sections are derived from these type of lines.
 
-Example 1
+**Example 1**
 ```json
 {
     "lyrics": ";Key of B
@@ -40,7 +40,7 @@ Example 1
 ```
 This example starts with a note denoting the key, A section, `v1`, and a number of chord lines followed by lyric lines.
 
-Example 2
+**Example 2**
 ```json
 {
     "lyrics": "Twinkle, twinkle, little star,
@@ -78,7 +78,7 @@ There are particular section types that also represent a common song sections. T
 
 Section types that don't fit these patterns are represented as just their original string.
 
-Example
+**Example**
 ```json
 {
     "presentation": "v1 c v2 c b Interlude c",
