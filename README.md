@@ -14,6 +14,5 @@ The desire is to give the ability to smoothly upgrade to a more complicated conf
 
 ## General Architechture
 ![Architecture Chart](./architecture.svg)
-<img src="./architecture.svg">
 
 [source](https://www.lucidchart.com/invitations/accept/c311a15e-7224-4a86-ba2f-b82a73967ef2)
