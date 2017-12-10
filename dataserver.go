@@ -8,8 +8,6 @@ import (
 )
 
 func main() {
-	os.Args = []string{"cmd", "../songjson/opensongmigrate/json"}
-
 	http.Handle("/songlist/", songListHandler(os.Args[1]))
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(r.URL.Path)
@@ -17,7 +15,7 @@ func main() {
 			f, _ := ioutil.ReadFile("./webapp/index.html")
 			w.Write(f)
 		} else {
-			f, _ := ioutil.ReadFile("." + r.URL.Path)
+			f, _ := ioutil.ReadFile("./webapp/" + r.URL.Path)
 			w.Write(f)
 		}
 	})

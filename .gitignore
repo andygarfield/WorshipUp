@@ -1,2 +1,3 @@
 *.js
 songjson/opensongmigrate/json
+node_modules*
