@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "target": "es3",
+        "outDir": "./dataserver/webapp/built"
+    },
+    "include": [
+        "./dataserver/webapp/src"
+    ]
+}

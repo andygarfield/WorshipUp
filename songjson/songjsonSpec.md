@@ -4,9 +4,11 @@ SongJSON (probably going to change the name) is a JSON subset that is suitable f
 ## Object keys
 
 ### `title`
-The song title as a string
+*Required*
+The song title as a string.
 
 ### `lyrics`
+*Required*
 The `lyrics` value is string representation of the song. Each line in the string begins with a character that denotes what type of information the line contains.
 
 ```javascript
@@ -20,7 +22,7 @@ If a lyric line appears before a section line, this line is interpreted as being
 
 For lines with chords to be valid, they must be followed by a line with lyrics that begins with a space. Otherwise they are ignored. A chord and lyric line couplet "line up," that is, the chord is at the same position on its line as the lyrics it goes with on the line below it.
 
-If there is a line that contains nothing or only white-space, that is interpreted as the beginning of a new page in the section. If the lyrics value contains no sections, anonymous sections are derived from these type of lines.
+If there is a line that contains nothing or only white-space and is surrounded by lyric lines, that is interpreted as the beginning of a new page in the section. If the lyrics contain no sections, anonymous sections are derived from these lines.
 
 **Example 1**
 ```json
@@ -62,6 +64,7 @@ How I wonder what you are!",
 This example contains only lyrics and doesn't have a section line. But the lack of any beginning section and the blank line makes this song have two anonymous sections.
 
 ### `presentation`
+*Optional*
 The `presentation` value represents the order of the song by space-delimited sections. The sections are referenced in the `lyrics` value. Section values are case-insensitive.
 
 There are particular section types that also represent a common song sections. These are represented by the implementation as their long name. They are as follows:
@@ -86,3 +89,11 @@ Section types that don't fit these patterns are represented as just their origin
 }
 ```
 The `lyrics` value must then contain each the sections `v1`, `c`, `v2`, `b`, and `Interlude` (can also be included as `interlude` as it is case-insensitive). These are interpreted as `Verse 1`, `Chorus`, `Verse 2`, `Bridge`, and `Interlude` respectively.
+
+### `author`
+*Optional*
+The song author
+
+### `ccli`
+*Optional*
+The Christian Copyright Licensing International number
