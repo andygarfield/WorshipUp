@@ -5,11 +5,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"hypher"
 	"io"
 	"io/ioutil"
 	"os"
 	"strings"
+
+	"github.com/andygarfield/hypher"
 )
 
 func main() {
@@ -39,22 +40,22 @@ func main() {
 
 func convertOpenSong(r io.Reader) ([]byte, error) {
 	addIfExists := func(m *map[string]string, contents []byte, tag string) error {
-		p := hypher.FindTags(tag, bytes.NewReader(contents))
-		if len(p) > 0 && p[0].Contents != "" {
+		p, err := hypher.FindTags(tag, bytes.NewReader(contents))
+		if err == nil && p[0].Contents != "" {
 			dm := *m
 			dm[tag] = p[0].Contents
 			return nil
 		}
 
-		return errors.New("Tag was not found")
+		return errors.New(tag + " tag was not found")
 	}
 
 	contents, _ := ioutil.ReadAll(r)
 	song := map[string]string{}
 
 	// Get and transform the lyrics section
-	l := hypher.FindTags("lyrics", bytes.NewReader(contents))
-	if len(l) < 1 {
+	l, lyricsErr := hypher.FindTags("lyrics", bytes.NewReader(contents))
+	if lyricsErr != nil {
 		return nil, errors.New("File had no lyrics tag")
 	}
 
