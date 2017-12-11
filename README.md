@@ -20,7 +20,7 @@ go get github.com/andygarfield/worshipup
 
 Navigate to the repo directory
 ```bash
-cd $GOPATH/src/github.com/andygarfield/worshipup
+cd ~/go/src/github.com/andygarfield/worshipup
 ```
 
 Install node packages
