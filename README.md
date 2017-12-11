@@ -13,7 +13,17 @@ Install Go
 brew install go
 ```
 
-Then install packages
+Go get this repo
+```bash
+go get github.com/andygarfield/worshipup
+```
+
+Navigate to the repo directory
+```bash
+cd $GOPATH/src/github.com/andygarfield/worshipup
+```
+
+Install node packages
 ```bash
 yarn install
 ```
