@@ -1,5 +1,31 @@
 # WorshipUp
 
+## Installation
+A few prerequisites. Recommended to use [Homebrew](https://brew.sh/).
+
+Install Yarn (and thus Node.js)
+```bash
+brew install yarn
+```
+
+Install Go
+```bash
+brew install go
+```
+
+Then install packages
+```bash
+yarn install
+```
+
+## Running
+To run the application
+```bash
+yarn run test
+```
+
+Then go to http://localhost:8080
+
 ## General idea
 Mostly copy OpenSong in organization abilities, but have a central server so that multiple people can work on the worship service throughout the week.
 

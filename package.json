@@ -1,9 +1,16 @@
 {
   "dependencies": {
+    "css-loader": "^0.28.7",
     "ts-loader": "^3.2.0",
-    "typescript": "2.6.2"
+    "typescript": "2.6.2",
+    "uglify-js": "^3.2.2",
+    "uglifyjs-webpack-plugin": "^1.1.2",
+    "vue": "^2.5.9",
+    "vue-loader": "^13.5.0",
+    "vue-template-compiler": "^2.5.9",
+    "webpack": "^3.10.0"
   },
   "scripts": {
-    "test": "webpack --config webpack.config.js & go run dataserver.go ./songjson/opensongmigrate/json"
+    "test": "webpack --config webpack.config.js & go run dataserver.go ./testsongs"
   }
 }

@@ -32,9 +32,13 @@ func main() {
 		if err != nil {
 			fmt.Println(err)
 		}
+		c, convertErr := convertOpenSong(bytes.NewReader(b))
 
-		c, _ := convertOpenSong(bytes.NewReader(b))
-		ioutil.WriteFile("./json/"+fi.Name()+".json", c, 0777)
+		if convertErr == nil {
+			ioutil.WriteFile("./json/"+fi.Name()+".json", c, 0777)
+		} else {
+			fmt.Println(fi.Name() + " could not be converted")
+		}
 	}
 }
 
@@ -55,7 +59,7 @@ func convertOpenSong(r io.Reader) ([]byte, error) {
 
 	// Get and transform the lyrics section
 	l, lyricsErr := hypher.FindTags("lyrics", bytes.NewReader(contents))
-	if lyricsErr != nil {
+	if lyricsErr != nil || len(l) == 0 {
 		return nil, errors.New("File had no lyrics tag")
 	}
 

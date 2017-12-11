@@ -1,14 +1,30 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
 )
 
+// SongJSON is a struct representation of the SongJSON format
+type SongJSON struct {
+	Title        string `json:"title"`
+	Lyrics       string `json:"lyrics"`
+	Presentation string `json:"presentation,omitempty"`
+	Author       string `json:"author,omitempty"`
+	CCLI         int    `json:"ccli,omitempty"`
+}
+
+// SongMap is a structure to look up the song in-memory
+type SongMap map[string]SongJSON
+
 func main() {
-	http.Handle("/songlist/", songListHandler(os.Args[1]))
+	songMap := createSongMap(os.Args[1])
+
+	http.Handle("/songlist/", songListHandler(&songMap))
+	http.Handle("/song/", songHandler(&songMap))
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(r.URL.Path)
 		if r.URL.Path == "/" || r.URL.Path == "" {
@@ -23,21 +39,45 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
-func songListHandler(songDir string) http.Handler {
+func createSongMap(songDir string) SongMap {
+	songFiles, err := ioutil.ReadDir(songDir)
+	if err != nil {
+		panic(err)
+	}
+
+	outSongMap := SongMap{}
+
+	for _, sf := range songFiles {
+		b, _ := ioutil.ReadFile(songDir + "/" + sf.Name())
+		var newSong SongJSON
+		json.Unmarshal(b, &newSong)
+
+		outSongMap[newSong.Title] = newSong
+	}
+
+	return outSongMap
+}
+
+func songListHandler(smp *SongMap) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		songFiles, err := ioutil.ReadDir(songDir)
-		if err != nil {
-			panic(err)
+		songMap := *smp
+		songList := []string{}
+
+		for key := range songMap {
+			songList = append(songList, key)
 		}
 
-		var outJSON string
-		for _, sf := range songFiles {
-			b, _ := ioutil.ReadFile(songDir + "/" + sf.Name())
-			outJSON += string(b)
-			fmt.Println(string(b))
-			break
-		}
+		outJSON, _ := json.Marshal(songList)
+		w.Write(outJSON)
+	})
+}
 
-		fmt.Fprintf(w, outJSON)
+func songHandler(smp *SongMap) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		songMap := *smp
+		songTitle := r.URL.Path[len("/song/"):]
+		b, _ := json.Marshal(songMap[songTitle])
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(b)
 	})
 }

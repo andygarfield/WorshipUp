@@ -1,15 +1,18 @@
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
-  entry: './webapp/src/app.ts',
+  entry: './webapp/src/main.ts',
   output: {
     path: path.resolve(__dirname, 'webapp', 'dist'),
     filename: 'bundle.js'
   },
   module: {
-      rules: [
-        {test: /\.ts$/, loader: 'ts-loader'},
-      ]
+    rules: [
+      {test: /\.css$/, use: ['vue-style-loader', 'css-loader']},
+      {test: /\.ts$/, loader: 'ts-loader'},
+      {test: /\.vue$/, loader: 'vue-loader'},
+    ]
   },
   watch: true,
   watchOptions: {
@@ -17,4 +20,7 @@ module.exports = {
     poll: 1000,
     ignored: /node_modules/
   },
+  // plugins: [
+  //   new UglifyJsPlugin()
+  // ]
 };
