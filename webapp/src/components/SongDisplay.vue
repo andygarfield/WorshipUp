@@ -1,13 +1,14 @@
 <template>
-  <div>
-    <h1>{{ songData.title }}</h1>
-    <p><pre>{{ songData.lyrics }}</pre></p>
-  </div>
+  <div v-html="songHtml"></div>
 </template>
 
 <script>
   export default {
     name: "SongDisplay",
-    props: ["songData"]
+    props: ["songHtml"]
   }
 </script>
+
+<style>
+
+</style>

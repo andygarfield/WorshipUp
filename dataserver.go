@@ -27,7 +27,7 @@ func main() {
 	http.Handle("/song/", songHandler(&songMap))
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(r.URL.Path)
-		if r.URL.Path == "/" || r.URL.Path == "" {
+		if r.URL.Path == "/" {
 			f, _ := ioutil.ReadFile("./webapp/index.html")
 			w.Write(f)
 		} else {
