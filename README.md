@@ -52,3 +52,13 @@ The desire is to have the ability to smoothly upgrade to a more complicated conf
 ![Architecture Chart](./architecture.svg)
 
 [source](https://www.lucidchart.com/invitations/accept/c311a15e-7224-4a86-ba2f-b82a73967ef2)
+
+## To-do
+- [ ] Finalize format for transmitting song data
+- [ ] Implement method for floating chords above the lyrics they go with
+- [ ] Make song printable, and preferably not in need of additional formatting. It should print on a second column if the second column overflows
+- [ ] Make the presentation feature
+- [ ] Implement accounts and authorization
+- [ ] Make way to edit songs
+- [ ] Create way to make set lists for upcoming services
+- [ ] Implement remote control app for phones
