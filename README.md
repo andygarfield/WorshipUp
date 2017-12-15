@@ -1,5 +1,21 @@
 # WorshipUp
 
+## General idea
+Mostly copy OpenSong in organization abilities, but have a central server so that multiple people can work on the worship service throughout the week.
+
+
+## To-do
+- [ ] Finalize format for transmitting song data
+- [ ] Implement method for floating chords above the lyrics they go with
+- [ ] Style the page
+- [ ] Make song printable, and preferably not in need of additional formatting. It should print on a second column if the second column overflows
+- [ ] Make the presentation feature
+- [ ] Implement accounts and authorization
+- [ ] Make way to edit songs
+- [ ] Create way to make set lists for upcoming services
+- [ ] Implement remote control app for phones
+
+
 ## Installation
 A few prerequisites. Recommended to use [Homebrew](https://brew.sh/).
 
@@ -36,8 +52,6 @@ yarn run test
 
 Then go to http://localhost:8080
 
-## General idea
-Mostly copy OpenSong in organization abilities, but have a central server so that multiple people can work on the worship service throughout the week.
 
 ## Configurations
 People who are setting up the system can choose from a few different configurations. These are ordered by simplest to most complex.
@@ -53,12 +67,3 @@ The desire is to have the ability to smoothly upgrade to a more complicated conf
 
 [source](https://www.lucidchart.com/invitations/accept/c311a15e-7224-4a86-ba2f-b82a73967ef2)
 
-## To-do
-- [ ] Finalize format for transmitting song data
-- [ ] Implement method for floating chords above the lyrics they go with
-- [ ] Make song printable, and preferably not in need of additional formatting. It should print on a second column if the second column overflows
-- [ ] Make the presentation feature
-- [ ] Implement accounts and authorization
-- [ ] Make way to edit songs
-- [ ] Create way to make set lists for upcoming services
-- [ ] Implement remote control app for phones
