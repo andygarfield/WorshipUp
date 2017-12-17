@@ -4,7 +4,7 @@
     </HeaderMenu>
     <div id="app-body">
       <Library id="library" @songClicked="loadSong"></Library>
-      <SongDisplay id="songDisplay" :songHtml="songHtml" :mode="mode"></SongDisplay>
+      <SongDisplay id="song-display" :songHtml="songHtml" :mode="mode"></SongDisplay>
     </div>
   </div>
 </template>
@@ -65,18 +65,20 @@
       width: 100vh;
     }
 
+    #app-body > * {
+      overflow: auto;
+    }
+
     #library {
       background: #ddd;
-      width: 30vh;
-      display: flex;
-      flex-flow: column nowrap;
-      height: 100vh;
+    }
+    
+    #library > * {
+      cursor: pointer;
     }
 
     #song-display {
-      width: 70vh;
       flex-grow: 1;
-      height: 100vh;
     }
 
     #service-order {}
