@@ -52,8 +52,8 @@
       margin: 0px;
     }
 
- #header-menu {
-      height: 20vh;
+    #header-menu {
+      height: 15vh;
     }
   }
 
@@ -61,24 +61,24 @@
     #app-body {
       display: flex;
       flex-direction: row;
-      height: 80vh;
-      width: 100vh;
+      height: 85vh;
     }
 
-    #app-body > * {
+    #app-body>* {
       overflow: auto;
     }
 
     #library {
       background: #ddd;
+      flex-basis: 25%;
     }
-    
-    #library > * {
+
+    #library>* {
       cursor: pointer;
     }
 
     #song-display {
-      flex-grow: 1;
+      flex-basis: 75%;
     }
 
     #service-order {}
