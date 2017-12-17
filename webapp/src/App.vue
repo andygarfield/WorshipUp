@@ -1,24 +1,31 @@
 <template>
   <div id="main">
-    <SongList id="songList" @songClicked="loadSong"></SongList>
-    <SongDisplay id="songDisplay" :songHtml="songHtml"></SongDisplay>
+    <HeaderMenu id="header-menu">
+    </HeaderMenu>
+    <div id="app-body">
+      <Library id="library" @songClicked="loadSong"></Library>
+      <SongDisplay id="songDisplay" :songHtml="songHtml" :mode="mode"></SongDisplay>
+    </div>
   </div>
 </template>
 
 <script>
-  import SongList from './components/SongList.vue'
+  import HeaderMenu from './components/HeaderMenu.vue'
+  import Library from './components/Library.vue'
   import SongDisplay from './components/SongDisplay.vue'
   import decodeSong from './decode.ts'
 
   export default {
     name: 'app',
     components: {
-      SongList: SongList,
+      HeaderMenu: HeaderMenu,
+      Library: Library,
       SongDisplay: SongDisplay,
     },
     data() {
       return {
-        songHtml: ""
+        songHtml: "",
+        mode: "read",
       }
     },
     methods: {
@@ -29,7 +36,6 @@
           if (this.readyState == 4 && this.status == 200) {
             let jsonRes = JSON.parse(this.responseText);
             vueInst.songHtml = decodeSong(jsonRes);
-            console.log("")
           }
         }
         xreq.open("GET", "/song/" + songTitle, true);
@@ -37,34 +43,42 @@
       }
     }
   }
-
 </script>
 
 <style>
-  body {
-    margin: 0px;
+  @media (min-width: 0px) {
+    body {
+      font-family: "Trebuchet MS", Helvetica, sans-serif;
+      margin: 0px;
+    }
+
+ #header-menu {
+      height: 20vh;
+    }
   }
 
-  #main {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    width: 100%;
-  }
+  @media (min-width: 690px) {
+    #app-body {
+      display: flex;
+      flex-direction: row;
+      height: 80vh;
+      width: 100vh;
+    }
 
-  #songList {
-    flex-grow: 1;
-    width: 30%;
-    display: flex;
-    flex-flow: column nowrap;
-    height: 100vh;
-    overflow: auto;
-  }
+    #library {
+      background: #ddd;
+      width: 30vh;
+      display: flex;
+      flex-flow: column nowrap;
+      height: 100vh;
+    }
 
-  #songDisplay {
-    width: 70%;
-    flex-grow: 1;
-    height: 100vh;
-    overflow: auto;
+    #song-display {
+      width: 70vh;
+      flex-grow: 1;
+      height: 100vh;
+    }
+
+    #service-order {}
   }
 </style>

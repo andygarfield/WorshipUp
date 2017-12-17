@@ -21,10 +21,12 @@ type SongJSON struct {
 type SongMap map[string]SongJSON
 
 func main() {
-	songMap := createSongMap(os.Args[1])
+	songMap := readSongs(os.Args[1])
 
 	http.Handle("/songlist/", songListHandler(&songMap))
 	http.Handle("/song/", songHandler(&songMap))
+	http.Handle("/newSong", newSongHandler(&songMap))
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(r.URL.Path)
 		if r.URL.Path == "/" {
@@ -39,7 +41,7 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
-func createSongMap(songDir string) SongMap {
+func readSongs(songDir string) SongMap {
 	songFiles, err := ioutil.ReadDir(songDir)
 	if err != nil {
 		panic(err)
@@ -79,5 +81,11 @@ func songHandler(smp *SongMap) http.Handler {
 		b, _ := json.Marshal(songMap[songTitle])
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(b)
+	})
+}
+
+func newSongHandler(smp *SongMap) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Yo yo yo, it worked"))
 	})
 }
