@@ -1,9 +1,18 @@
 <template>
   <div>
     <div v-html="songHtml" v-if="mode == 'read'"></div>
-    <input v-if="mode == 'edit'">
+    <form
+      id="edit-song"
+      v-if="mode == 'edit'"
+      action="/newSong">
+      <button
+        type="submit"
+        form="edit-song">
+        Save
+      </button>
+      <input type="text">
+    </form>
   </div>
-  
 </template>
 
 <script>

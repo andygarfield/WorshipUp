@@ -3,7 +3,11 @@
     <HeaderMenu id="header-menu">
     </HeaderMenu>
     <div id="app-body">
-      <Library id="library" @songClicked="loadSong"></Library>
+      <Library
+        id="library"
+        @songClicked="loadSong"
+        @newSong="mode = 'edit'">
+      </Library>
       <SongDisplay id="song-display" :songHtml="songHtml" :mode="mode"></SongDisplay>
     </div>
   </div>
