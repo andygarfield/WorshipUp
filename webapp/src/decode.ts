@@ -29,27 +29,46 @@ function parseChords(chordLine: string, lyricsLine: string) {
     }
 
     let newDiv = ""
-    for (let chordLineIndex of chordIndices) {
-        if (newDiv == "") {
-            let beginning = lyricsLine.slice(0, chordLineIndex[0])
-            if (beginning.length != 0) {
-                newDiv += `
-                    <div class="cl-couplet">
-                        <div class="chords"></div>
-                        <div class="lyrics">${beginning}</div>
-                    </div>
-                    `
-            }
-            newDiv += `
-            <div class="cl-couplet">
-                <div class="chords">${chordLine.slice(chordLineIndex[0], chordLineIndex[1])}</div>
-                <div class="lyrics">${lyricsLine.slice(chordLineIndex[0], chordLineIndex[1])}</div>
-            </div>
-            `
-        } else {
-            // newDiv += newMiddleCouplet(chordLineIndex)
+
+    // If the lyric line is shorter than the chord line,
+    // normalize it to be as long as chord line
+    if (chordLine.length > lyricsLine.length) {
+        let difference = chordLine.length - lyricsLine.length
+        for (let i = 0; i < difference; i++) {
+            lyricsLine += " "
         }
     }
+
+    // Have previous loop value
+
+    // Handle special case of the first chord being at index 0
+
+    // Loop through chord indexes, using the beginning value as
+    // the beginning of the lyrics line
+
+    
+    // let beginning = lyricsLine.slice(0, chordIndices[0][0])
+    // if (beginning.length != 0) {
+    //     newDiv += `
+    //         <div class="cl-couplet">
+    //             <div class="chords"></div>
+    //             <div class="lyrics">${beginning}</div>
+    //         </div>
+    //         `
+    // }
+
+    // let prevStartIndex = 0;
+    // for (let chordLineIndex of chordIndices) {
+    //     newDiv += `
+    //     <div class="cl-couplet">
+    //         <div class="chords">${chordLine.slice(chordLineIndex[0], chordLineIndex[1])}</div>
+    //         <div class="lyrics">${lyricsLine.slice(chordLineIndex[0], chordLineIndex[1])}</div>
+    //     </div>
+    //     `
+    //     } else {
+    //         // newDiv += newMiddleCouplet(chordLineIndex)
+    //     }
+    // }
 
     return newDiv
 
