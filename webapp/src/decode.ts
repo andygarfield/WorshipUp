@@ -168,7 +168,7 @@ export default function decode(sj: SongJSON) {
                     default:
                         expanded = line.slice(1);
                 }
-                appendElement('section', 'songSection', expanded)
+                appendElement('section', 'song-section', expanded)
                 break;
         }
     }

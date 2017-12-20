@@ -31,4 +31,14 @@
     display: flex;
     flex-flow: row wrap;
   }
+
+  .chord {
+    color: palevioletred;
+  }
+
+  .song-section {
+    font-weight: bold;
+    margin: 15px 0px 5px;
+    font-size: 1.1em;
+  }
 </style>
