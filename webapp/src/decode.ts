@@ -8,15 +8,17 @@ interface SongJSON {
 
 function parseChords(chordLine: string, lyricsLine: string) {
     let chordLineArray = chordLine.split("")
-    let chordIndices = [];
 
+    let chordIndices = [];
     let currentChord = "";
+
+    // Loop through the chord characters
     for (let i = 0; i < chordLineArray.length; i++) {
+        // If there is no current chord
         if (currentChord == "") {
+            // Check if current is the beginning of a chord
             if (isChordLetter(chordLineArray[i])) {
                 currentChord += chordLineArray[i]
-            } else {
-                new Error("Not a chord")
             }
         } else {
             if (chordLineArray[i] == " ") {
@@ -27,8 +29,10 @@ function parseChords(chordLine: string, lyricsLine: string) {
             }
         }
     }
-
-    let newDiv = ""
+    // Catch the chords at the end of the line
+    if (currentChord != "") {
+        chordIndices.push([chordLineArray.length - currentChord.length, chordLineArray.length])
+    }
 
     // If the lyric line is shorter than the chord line,
     // normalize it to be as long as chord line
@@ -39,86 +43,88 @@ function parseChords(chordLine: string, lyricsLine: string) {
         }
     }
 
-    // Have previous loop value
-
-    // Handle special case of the first chord being at index 0
-
-    // Loop through chord indexes, using the beginning value as
-    // the beginning of the lyrics line
-
-    
-    // let beginning = lyricsLine.slice(0, chordIndices[0][0])
-    // if (beginning.length != 0) {
-    //     newDiv += `
-    //         <div class="cl-couplet">
-    //             <div class="chords"></div>
-    //             <div class="lyrics">${beginning}</div>
-    //         </div>
-    //         `
-    // }
-
-    // let prevStartIndex = 0;
-    // for (let chordLineIndex of chordIndices) {
-    //     newDiv += `
-    //     <div class="cl-couplet">
-    //         <div class="chords">${chordLine.slice(chordLineIndex[0], chordLineIndex[1])}</div>
-    //         <div class="lyrics">${lyricsLine.slice(chordLineIndex[0], chordLineIndex[1])}</div>
-    //     </div>
-    //     `
-    //     } else {
-    //         // newDiv += newMiddleCouplet(chordLineIndex)
-    //     }
-    // }
-
-    return newDiv
-
-    // function newMiddleCouplet(indices: number[]) {
-    //     return `
-    //     <div class="cl-couplet">
-    //         <div class="chords">${chordLine.slice(indices[0], indices[1])}</div>
-    //         <div class="lyrics">${lyricsLine.slice(indices[0], indices[1])}</div>
-    //     </div>
-    //     `
-    // }
-
-    function isChordLetter (char: string) {
-        let chordLetters = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
-        if (chordLetters.indexOf(char.toLowerCase()) != -1) {
-            return true
+    // An array for the pairs of chords and lyrics
+    let clPairs = [];
+    for (let i = 0; i < chordIndices.length; i++) {
+        // If it's the first time through the loop...
+        if (i == 0) {
+            // ... and if there's a beginning (where the 
+            // first chord character is not index 0)...
+            if (chordIndices[0][0] != 0) {
+                // ... write a beginning
+                clPairs.push([
+                    '&nbsp;',
+                    lyricsLine.slice(0, chordIndices[0][0])
+                        .replace(/^\s+|\s+$/g, '&nbsp;'),
+                ])
+            } // Otherwise, continue
+        } else {
+            clPairs.push([
+                chordLine.slice(chordIndices[i - 1][0], chordIndices[i - 1][1]),
+                lyricsLine.slice(chordIndices[i - 1][0], chordIndices[i][0])
+                    .replace(/^\s+|\s+$/g, '&nbsp;'),
+            ])
         }
-        return false
     }
+    // Add final value
+    clPairs.push([
+        chordLine.slice(chordIndices[chordIndices.length - 1][0], chordIndices[chordIndices.length - 1][1]),
+        lyricsLine.slice(chordIndices[chordIndices.length - 1][0])
+            .replace(/^\s+|\s+$/g, '&nbsp;'),
+    ])
+
+    // Loop through pairs and make divs
+    let newDiv = ""
+    for (let clPair of clPairs) {
+        newDiv += `
+            <div class="c-l-couplet">
+                <div class="chord">${clPair[0]}</div>
+                <div class="lyric">${clPair[1]}</div>
+            </div>
+        `
+    }
+    return newDiv
+}
+
+function isChordLetter(char: string) {
+    let chordLetters = ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+    if (chordLetters.indexOf(char.toLowerCase()) != -1) {
+        return true
+    }
+    return false
 }
 
 export default function decode(sj: SongJSON) {
     let outHtml = ""
-    var previousLineTag = "";
 
     let appendElement = (tagName: string, className: string | null, innerText: string) => {
-        if (previousLineTag == tagName) {
-            outHtml += "<br>" + innerText
-        } else {
-            outHtml += `</${previousLineTag}><${tagName}${className ? ` class="` + className + `"`: ""}>${innerText}`;
-        }
-        previousLineTag = tagName;
+        outHtml += `
+            <${tagName}${className ? ` class="` + className + `"`: ``}>${innerText}</${tagName}>
+        `;
     }
 
     // Add title and author
-    appendElement('h1', 'title' , sj.title)
+    appendElement('h1', 'title', sj.title)
     if (sj.author) {
         appendElement('h3', 'author', sj.author)
     }
 
     let chordLine = "";
+
+    // Use the first character of every line to identify its line-type
     for (let line of sj.lyrics.split("\n")) {
         let firstChar = line.slice(0, 1)
         switch (line[0]) {
+            //Comment line
             case ';':
                 appendElement('div', 'comment', line.slice(1).trim())
                 break;
+            // Chord line
             case '.':
+                // Save the line for use with a lyric line
                 chordLine = line.slice(1);
                 break;
+            // Lyric line
             case ' ':
                 if (chordLine) {
                     appendElement('div', 'couplet-line', parseChords(chordLine, line.slice(1)))

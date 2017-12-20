@@ -82,6 +82,7 @@
     }
 
     #song-display {
+      margin-left: 6px;
       flex-basis: 75%;
     }
 

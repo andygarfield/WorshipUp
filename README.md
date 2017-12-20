@@ -15,7 +15,7 @@ Mostly copy OpenSong in organization abilities, but have a central server so tha
 - [ ] Finalize format for transmitting song data
 - [ ] Implement method for floating chords above the lyrics they go with
 - [ ] Style the page
-- [ ] Make song printable, and preferably not in need of additional formatting. It should print on a second column if the second column overflows
+- [ ] Make song printable, and preferably not in need of additional formatting. It should print on a second column if the first column overflows
 - [ ] Make the presentation feature
 - [ ] Implement accounts and authorization
 - [ ] Make way to edit songs
@@ -61,7 +61,7 @@ Then go to http://localhost:8080
 
 
 ## Configurations
-People who are setting up the system can choose from a few different configurations. These are ordered by simplest to most complex.
+People who are setting up the system can choose from a few different configurations. These are ordered simplest to most complex.
 
 1. A basic single-system setup where the data is stored and presented locally. The client and server are implimented on the same machine.
 2. A client and a server implementation on separate machines. The server has the master copy of the data and the client syncs with it. The desktop client presents with a current copy of the data. Also have a web interface that has all the capabilities of the desktop application.

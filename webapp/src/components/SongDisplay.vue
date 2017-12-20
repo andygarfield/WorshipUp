@@ -26,4 +26,9 @@
   h1 {
     margin-top: 0px;
   }
+
+  .couplet-line {
+    display: flex;
+    flex-flow: row wrap;
+  }
 </style>
