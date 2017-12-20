@@ -20,10 +20,13 @@ function parseChords(chordLine: string, lyricsLine: string) {
             if (isChordLetter(chordLineArray[i])) {
                 currentChord += chordLineArray[i]
             }
+        // If there is a current chord
         } else {
+            // If a space is the next character, the chord has ended
             if (chordLineArray[i] == " ") {
                 chordIndices.push([i - currentChord.length, i])
                 currentChord = ""
+            // If not, the chord is added to
             } else {
                 currentChord += chordLineArray[i]
             }
@@ -133,10 +136,16 @@ export default function decode(sj: SongJSON) {
                     appendElement('div', 'lyrics', line.slice(1));
                 }
                 break;
+            // Section line
             case '!':
                 let secondChar = line.slice(1, 2).toLowerCase();
                 let expanded = '';
 
+                // See if the section fits a known type
+                // The bug here is that any section that begins
+                // with these letters will be assumed to be these
+                // sections. There also needs to be an implimentation
+                // of numbered choruses and bridges and the like
                 switch (secondChar) {
                     case "v":
                         expanded = "Verse " + line.slice(2);

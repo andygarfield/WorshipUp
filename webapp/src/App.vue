@@ -52,7 +52,7 @@
 <style>
   @media (min-width: 0px) {
     body {
-      font-family: "Trebuchet MS", Helvetica, sans-serif;
+      font-family: 'Fira Sans', sans-serif;
       margin: 0px;
     }
 
