@@ -90,7 +90,7 @@ func songHandler(smp *SongMap) http.Handler {
 
 func newSongHandler(smp *SongMap) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(scrubSong(r.Form.Get())))
+		w.Write([]byte(scrubSong(r.Body)))
 	})
 }
 
