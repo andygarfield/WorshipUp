@@ -2,9 +2,9 @@ const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
-  entry: './webapp/src/main.ts',
+  entry: './frontend/src/main.ts',
   output: {
-    path: path.resolve(__dirname, 'webapp', 'dist'),
+    path: path.resolve(__dirname, 'frontend', 'dist'),
     filename: 'bundle.js'
   },
   module: {
@@ -20,7 +20,7 @@ module.exports = {
     poll: 1000,
     ignored: /node_modules/
   },
-  // plugins: [
-  //   new UglifyJsPlugin()
-  // ]
+  plugins: [
+    new UglifyJsPlugin()
+  ]
 };

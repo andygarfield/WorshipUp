@@ -1,12 +1,11 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "outDir": "./dataserver/webapp/built",
         "strict": true,
         "module": "es2015",
         "moduleResolution": "node"
     },
     "include": [
-        "./webapp/src"
+        "./frontend/src"
     ]
 }

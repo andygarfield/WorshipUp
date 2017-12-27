@@ -6,5 +6,5 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	os.Args = []string{"cmd", "./songjson/opensongmigrate/json"}
+	os.Args = []string{"cmd", "../songjson/opensongmigrate/json"}
 }

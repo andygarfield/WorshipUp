@@ -22,6 +22,8 @@ If a lyric line appears before a section line, this line is interpreted as being
 
 For lines with chords to be valid, they must be followed by a line with lyrics that begins with a space. Otherwise they are ignored. A chord and lyric line couplet "line up," that is, the chord is at the same position on its line as the lyrics it goes with on the line below it.
 
+If there is a need to put more chords in a space on a section of lyrics than could fit typically, underscores are used as a filler on the lyric line.
+
 If there is a line that contains nothing or only white-space and is surrounded by lyric lines, that is interpreted as the beginning of a new page in the section. If the lyrics contain no sections, anonymous sections are derived from these lines.
 
 **Example 1**

@@ -6,7 +6,7 @@
       <Library
         id="library"
         @songClicked="loadSong"
-        @newSong="mode = 'edit'">
+        @newSong="newSong">
       </Library>
       <SongDisplay id="song-display" :songHtml="songHtml" :mode="mode"></SongDisplay>
     </div>
@@ -34,6 +34,8 @@
     },
     methods: {
       loadSong(songTitle) {
+        this.mode = "read";
+
         let xreq = new XMLHttpRequest();
         let vueInst = this;
         xreq.onreadystatechange = function () {
@@ -44,7 +46,10 @@
         }
         xreq.open("GET", "/song/" + songTitle, true);
         xreq.send();
-      }
+      },
+      newSong() {
+        this.mode = "edit";
+      },
     }
   }
 </script>
@@ -82,7 +87,7 @@
     }
 
     #song-display {
-      margin-left: 6px;
+      /* margin-left: 6px; */
       flex-basis: 75%;
     }
 

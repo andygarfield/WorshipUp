@@ -3,9 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"regexp"
 )
 
 // SongJSON is a struct representation of the SongJSON format
@@ -16,6 +18,8 @@ type SongJSON struct {
 	Author       string `json:"author,omitempty"`
 	CCLI         int    `json:"ccli,omitempty"`
 }
+
+var lineMatcher, _ = regexp.Compile(`^(!|;|\.|\s)[a-zA-Z\s.\,\;]+`)
 
 // SongMap is a structure to look up the song in-memory
 type SongMap map[string]SongJSON
@@ -30,10 +34,10 @@ func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(r.URL.Path)
 		if r.URL.Path == "/" {
-			f, _ := ioutil.ReadFile("./webapp/index.html")
+			f, _ := ioutil.ReadFile("./frontend/index.html")
 			w.Write(f)
 		} else {
-			f, _ := ioutil.ReadFile("./webapp/" + r.URL.Path)
+			f, _ := ioutil.ReadFile("./frontend/" + r.URL.Path)
 			w.Write(f)
 		}
 	})
@@ -86,6 +90,16 @@ func songHandler(smp *SongMap) http.Handler {
 
 func newSongHandler(smp *SongMap) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Yo yo yo, it worked"))
+		w.Write([]byte(scrubSong(r.Form.Get())))
 	})
+}
+
+func scrubSong(r io.Reader) string {
+	b, _ := ioutil.ReadAll(r)
+	s := string(b)
+	// s := strings.Replace(string(b), "\r", "\n", -1)
+	if lineMatcher.Match([]byte(s)) {
+		return "The input is valid"
+	}
+	return s
 }
