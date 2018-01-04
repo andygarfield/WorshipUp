@@ -15,7 +15,7 @@ Mostly copy OpenSong in organization abilities, but have a central server so tha
 - [ ] Finalize format for transmitting song data
 - [ ] Fix OpenSong importing for songs that have numbered lyric lines (ex. Are You Washed)
 - [x] Implement method for floating chords above the lyrics they go with
-- [ ] Style the page
+- [x] Style the page a little
 - [ ] Make song printable, and preferably not in need of additional formatting. It should print on a second column if the first column overflows
 - [ ] Make the presentation feature
 - [ ] Implement accounts and authorization

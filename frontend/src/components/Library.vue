@@ -29,24 +29,33 @@
         songs: []
       }
     },
+    props: ["refreshSongs"],
     created() {
-      let xreq = new XMLHttpRequest();
-      let vueInst = this;
-      xreq.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-          vueInst.songs = JSON.parse(this.responseText);
-        }
-      }
-      xreq.open("GET", "/songlist/", true);
-      xreq.send();
+      this.getSongList();
     },
     methods: {
+      getSongList () {
+        let xreq = new XMLHttpRequest();
+        let vueInst = this;
+        xreq.onload = function () {
+          vueInst.songs = JSON.parse(this.responseText);
+        }
+        xreq.open("GET", "/songlist/", true);
+        xreq.send();
+      },
+
       songClicked (songTitle) {
-        this.$emit("songClicked", songTitle)
+        this.$emit("songClicked", songTitle);
       },
+
       newSong () {
-        this.$emit("newSong")
+        this.$emit("newSong");
       },
+    },
+    calculated: {
+      refreshLibrary () {
+        
+      }
     }
   }
 </script>

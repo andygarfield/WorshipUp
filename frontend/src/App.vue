@@ -5,10 +5,11 @@
     <div id="app-body">
       <Library
         id="library"
+        :refreshSongs="refreshSongs"
         @songClicked="loadSong"
         @newSong="newSong">
       </Library>
-      <SongDisplay id="song-display" :songHtml="songHtml" :mode="mode"></SongDisplay>
+      <SongDisplay id="song-display" :songHtml="songHtml" :mode="mode" @refreshSongList="refreshSongs = true"></SongDisplay>
     </div>
   </div>
 </template>
@@ -30,6 +31,7 @@
       return {
         songHtml: "",
         mode: "read",
+        refreshSongs: false,
       }
     },
     methods: {

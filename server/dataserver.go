@@ -3,11 +3,11 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"regexp"
+	"strings"
 )
 
 // SongJSON is a struct representation of the SongJSON format
@@ -28,8 +28,8 @@ func main() {
 	songMap := readSongs(os.Args[1])
 
 	http.Handle("/songlist/", songListHandler(&songMap))
-	http.Handle("/song/", songHandler(&songMap))
-	http.Handle("/newSong", newSongHandler(&songMap))
+	http.Handle("/song/", songReader(&songMap))
+	http.Handle("/newSong", makeNewSong(&songMap, os.Args[1]))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(r.URL.Path)
@@ -54,14 +54,21 @@ func readSongs(songDir string) SongMap {
 	outSongMap := SongMap{}
 
 	for _, sf := range songFiles {
-		b, _ := ioutil.ReadFile(songDir + "/" + sf.Name())
-		var newSong SongJSON
-		json.Unmarshal(b, &newSong)
+		fp := songDir + "/" + sf.Name()
+		newSong := readSong(fp)
 
 		outSongMap[newSong.Title] = newSong
 	}
 
 	return outSongMap
+}
+
+func readSong(filePath string) SongJSON {
+	b, _ := ioutil.ReadFile(filePath)
+	var newSong SongJSON
+	json.Unmarshal(b, &newSong)
+
+	return newSong
 }
 
 func songListHandler(smp *SongMap) http.Handler {
@@ -78,7 +85,7 @@ func songListHandler(smp *SongMap) http.Handler {
 	})
 }
 
-func songHandler(smp *SongMap) http.Handler {
+func songReader(smp *SongMap) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		songMap := *smp
 		songTitle := r.URL.Path[len("/song/"):]
@@ -88,18 +95,25 @@ func songHandler(smp *SongMap) http.Handler {
 	})
 }
 
-func newSongHandler(smp *SongMap) http.Handler {
+func makeNewSong(smp *SongMap, songDir string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte(scrubSong(r.Body)))
+		scrubbedBody := scrubUserData(r.PostFormValue("body"))
+		scrubbedTitle := scrubUserData(r.PostFormValue("title"))
+
+		newFilePath := songDir + "/" + scrubbedTitle + ".json"
+		ioutil.WriteFile(newFilePath, []byte(scrubbedBody), 0677)
+
+		readSong(newFilePath)
+
+		fmt.Fprintf(w, scrubbedBody)
 	})
 }
 
-func scrubSong(r io.Reader) string {
-	b, _ := ioutil.ReadAll(r)
-	s := string(b)
-	// s := strings.Replace(string(b), "\r", "\n", -1)
+func scrubUserData(s string) string {
+	fmt.Println(s)
+	s = strings.Replace(s, "\r", "\n", -1)
 	if lineMatcher.Match([]byte(s)) {
-		return "The input is valid"
+		return s
 	}
-	return s
+	return "Invalid input"
 }

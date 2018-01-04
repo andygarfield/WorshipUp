@@ -9,14 +9,17 @@
       id="edit-song"
       v-if="mode == 'edit'"
       >
-      <button
-        id="save-button"
-        type="submit"
-        form="edit-song"
-        @click="save">
-        Save
-      </button>
-      <textarea id="edit-text"></textarea>
+      <div id="form-area">
+        <button
+          id="save-button"
+          type="submit"
+          form="edit-song"
+          @click="save">
+          Save
+        </button>
+        <textarea id="edit-title"></textarea>
+        <textarea id="edit-body"></textarea>
+      </div>
     </div>
   </div>
 </template>
@@ -27,15 +30,20 @@
     props: ["songHtml", "mode"],
     methods: {
       save () {
-        let xhttp = new XMLHttpRequest()
-        xhttp.open("POST", "/newSong")
+        let xhttp = new XMLHttpRequest();
+        
+        xhttp.open("POST", "/newSong");
         xhttp.onload = function(e) {
           console.log(e);
+          this.$emit("refreshSongList");
         }
-
-        let text = document.getElementById("edit-text");
+        let songTitle = document.getElementById("edit-title");
+        let songBody = document.getElementById("edit-body");
         
-        xhttp.send(text.innerText)
+
+        xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhttp.send("title=" + songTitle.value  + "&" + "body=" + songBody.value);
+
       }
     }
   }
@@ -65,9 +73,18 @@
     font-size: 1.1em;
   }
 
-  #edit-song {
+  #form-area {
     display: flex;
     flex-flow: column nowrap;
+    box-shadow: 1px 1px 3px 0px rgba(0,0,0,0.3);
+    height: 100%;
+    box-sizing: border-box;
+    border-radius: 4px 4px 0 0;
+    min-height: 100%;
+    min-width: 100%;
+  }
+
+  #edit-song {
     background: #eee;
     height: 100%;
     padding: 20px;
@@ -82,7 +99,7 @@
     cursor: pointer;
   }
 
-  textarea#edit-text {
+  textarea#edit-body {
     width: 100%;
     height: 100%;
     padding: 17px;
