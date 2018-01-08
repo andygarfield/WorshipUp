@@ -14,6 +14,9 @@ module.exports = {
       {test: /\.vue$/, loader: 'vue-loader'},
     ]
   },
+  resolve: {
+    extensions: ['.ts', '.js']
+  },
   watch: true,
   watchOptions: {
     aggregateTimeout: 300,

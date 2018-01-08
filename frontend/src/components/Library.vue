@@ -10,9 +10,9 @@
     <div id="library-elements">
       <ul>
         <li
-          v-for="(songTitle, itemIndex) of songs"
+          v-for="(songTitle, itemIndex) of songList"
           :key="itemIndex"
-          @click="songClicked(songTitle)"
+          @click="loadSong(songTitle)"
         >
           {{ songTitle }}
         </li>
@@ -22,41 +22,27 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+
   export default {
     name: "SongList",
-    data() {
-      return {
-        songs: []
-      }
-    },
-    props: ["refreshSongs"],
+    computed: mapState({
+      songList: state => state.songList,
+    }),
     created() {
       this.getSongList();
     },
     methods: {
-      getSongList () {
-        let xreq = new XMLHttpRequest();
-        let vueInst = this;
-        xreq.onload = function () {
-          vueInst.songs = JSON.parse(this.responseText);
-        }
-        xreq.open("GET", "/songlist/", true);
-        xreq.send();
+      loadSong (songTitle) {
+        return this.$store.dispatch('loadSong', songTitle)
       },
-
-      songClicked (songTitle) {
-        this.$emit("songClicked", songTitle);
-      },
-
       newSong () {
-        this.$emit("newSong");
+        return this.$store.commit('switchMode', 'edit')
       },
-    },
-    calculated: {
-      refreshLibrary () {
-        
+      getSongList () {
+        return this.$store.dispatch('getSongList')
       }
-    }
+    },
   }
 </script>
 

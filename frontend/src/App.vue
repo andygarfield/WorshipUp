@@ -5,11 +5,9 @@
     <div id="app-body">
       <Library
         id="library"
-        :refreshSongs="refreshSongs"
-        @songClicked="loadSong"
         @newSong="newSong">
       </Library>
-      <SongDisplay id="song-display" :songHtml="songHtml" :mode="mode" @refreshSongList="refreshSongs = true"></SongDisplay>
+      <SongDisplay id="song-display"></SongDisplay>
     </div>
   </div>
 </template>
@@ -35,20 +33,6 @@
       }
     },
     methods: {
-      loadSong(songTitle) {
-        this.mode = "read";
-
-        let xreq = new XMLHttpRequest();
-        let vueInst = this;
-        xreq.onreadystatechange = function () {
-          if (this.readyState == 4 && this.status == 200) {
-            let jsonRes = JSON.parse(this.responseText);
-            vueInst.songHtml = decodeSong(jsonRes);
-          }
-        }
-        xreq.open("GET", "/song/" + songTitle, true);
-        xreq.send();
-      },
       newSong() {
         this.mode = "edit";
       },

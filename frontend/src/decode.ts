@@ -97,7 +97,7 @@ function isChordLetter(char: string) {
     return false
 }
 
-export default function decode(sj: SongJSON) {
+export function decodeSong(sj: SongJSON) {
     let outHtml = ""
 
     let appendElement = (tagName: string, className: string | null, innerText: string) => {

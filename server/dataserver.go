@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -19,7 +20,8 @@ type SongJSON struct {
 	CCLI         int    `json:"ccli,omitempty"`
 }
 
-var lineMatcher, _ = regexp.Compile(`^(!|;|\.|\s)[a-zA-Z\s.\,\;]+`)
+var songBodyRegex, _ = regexp.Compile(`^(!|;|\.|\s)[a-zA-Z\s.\,\;]+`)
+var songTitleRegex, _ = regexp.Compile(`[a-zA-Z\s\,()]+`)
 
 // SongMap is a structure to look up the song in-memory
 type SongMap map[string]SongJSON
@@ -97,8 +99,18 @@ func songReader(smp *SongMap) http.Handler {
 
 func makeNewSong(smp *SongMap, songDir string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		scrubbedBody := scrubUserData(r.PostFormValue("body"))
-		scrubbedTitle := scrubUserData(r.PostFormValue("title"))
+		scrubbedTitle, titleErr := scrubUserTitle(r.PostFormValue("title"))
+		scrubbedBody, bodyErr := scrubUserData(r.PostFormValue("body"))
+
+		if titleErr != nil || bodyErr != nil {
+			fmt.Fprintf(w, "Error: Invalid input")
+		}
+
+		songMap := *smp
+		songMap[scrubbedTitle] = SongJSON{
+			Title:  scrubbedTitle,
+			Lyrics: scrubbedBody,
+		}
 
 		newFilePath := songDir + "/" + scrubbedTitle + ".json"
 		ioutil.WriteFile(newFilePath, []byte(scrubbedBody), 0677)
@@ -109,11 +121,20 @@ func makeNewSong(smp *SongMap, songDir string) http.Handler {
 	})
 }
 
-func scrubUserData(s string) string {
-	fmt.Println(s)
+func scrubUserData(s string) (string, error) {
 	s = strings.Replace(s, "\r", "\n", -1)
-	if lineMatcher.Match([]byte(s)) {
-		return s
+	if songBodyRegex.Match([]byte(s)) {
+		fmt.Println(s)
+		return s, nil
 	}
-	return "Invalid input"
+	return "", errors.New("Invalid input")
+}
+
+func scrubUserTitle(s string) (string, error) {
+	s = strings.Replace(s, "\r", "\n", -1)
+	if songTitleRegex.Match([]byte(s)) {
+		fmt.Println(s)
+		return s, nil
+	}
+	return "", errors.New("Invalid input")
 }

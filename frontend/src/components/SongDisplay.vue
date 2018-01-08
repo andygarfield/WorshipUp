@@ -2,7 +2,7 @@
   <div>
     <div
       id="song-read"
-      v-html="songHtml"
+      v-html="songData"
       v-if="mode == 'read'">
     </div>
     <div
@@ -25,27 +25,29 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+
   export default {
     name: "SongDisplay",
-    props: ["songHtml", "mode"],
     methods: {
       save () {
         let xhttp = new XMLHttpRequest();
         
         xhttp.open("POST", "/newSong");
         xhttp.onload = function(e) {
-          console.log(e);
-          this.$emit("refreshSongList");
+          this.$store.dispatch("getSongList");
         }
         let songTitle = document.getElementById("edit-title");
         let songBody = document.getElementById("edit-body");
-        
 
         xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         xhttp.send("title=" + songTitle.value  + "&" + "body=" + songBody.value);
-
-      }
-    }
+      },
+    },
+    computed: mapState({
+      mode: state => state.mode,
+      songData: state => state.songData,
+    }),
   }
 </script>
 
