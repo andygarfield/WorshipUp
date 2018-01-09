@@ -96,6 +96,7 @@ func songReader(smp *SongMap) http.Handler {
 
 func createNewSong(smp *SongMap, songDir string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Scrub the data of any invalid or malicious input
 		scrubbedTitle, titleErr := scrubUserTitle(r.PostFormValue("title"))
 		scrubbedBody, bodyErr := scrubUserData(r.PostFormValue("body"))
 
@@ -104,16 +105,21 @@ func createNewSong(smp *SongMap, songDir string) http.Handler {
 		}
 
 		songMap := *smp
-		songMap[scrubbedTitle] = SongJSON{
+
+		contents := SongJSON{
 			Title:  scrubbedTitle,
 			Lyrics: scrubbedBody,
 		}
 
+		songMap[scrubbedTitle] = contents
+
+		serialized, _ := json.Marshal(contents)
+
 		newFilePath := songDir + "/" + scrubbedTitle + ".json"
-		ioutil.WriteFile(newFilePath, []byte(scrubbedBody), 0677)
+		ioutil.WriteFile(newFilePath, serialized, 0677)
 
 		readSong(newFilePath)
 
-		fmt.Fprintf(w, scrubbedBody)
+		fmt.Fprintf(w, "Form submitted")
 	})
 }

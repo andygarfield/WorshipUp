@@ -32,14 +32,17 @@
     methods: {
       save () {
         let vueInst = this;
+        let songTitle = document.getElementById("edit-title");
+        let songBody = document.getElementById("edit-body");
+
         let xhttp = new XMLHttpRequest();
         
         xhttp.open("POST", "/newSong");
         xhttp.onload = function(e) {
           vueInst.$store.dispatch("getSongList");
+          vueInst.$store.dispatch("loadSong", songTitle.value)
+          vueInst.$store.commit("switchMode", "read")
         }
-        let songTitle = document.getElementById("edit-title");
-        let songBody = document.getElementById("edit-body");
 
         xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         xhttp.send("title=" + songTitle.value  + "&" + "body=" + songBody.value);
