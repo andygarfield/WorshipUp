@@ -31,11 +31,12 @@
     name: "SongDisplay",
     methods: {
       save () {
+        let vueInst = this;
         let xhttp = new XMLHttpRequest();
         
         xhttp.open("POST", "/newSong");
         xhttp.onload = function(e) {
-          this.$store.dispatch("getSongList");
+          vueInst.$store.dispatch("getSongList");
         }
         let songTitle = document.getElementById("edit-title");
         let songBody = document.getElementById("edit-body");

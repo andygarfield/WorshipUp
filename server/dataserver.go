@@ -2,13 +2,11 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
-	"regexp"
-	"strings"
+	"sort"
 )
 
 // SongJSON is a struct representation of the SongJSON format
@@ -20,9 +18,6 @@ type SongJSON struct {
 	CCLI         int    `json:"ccli,omitempty"`
 }
 
-var songBodyRegex, _ = regexp.Compile(`^(!|;|\.|\s)[a-zA-Z\s.\,\;]+`)
-var songTitleRegex, _ = regexp.Compile(`[a-zA-Z\s\,()]+`)
-
 // SongMap is a structure to look up the song in-memory
 type SongMap map[string]SongJSON
 
@@ -31,7 +26,7 @@ func main() {
 
 	http.Handle("/songlist/", songListHandler(&songMap))
 	http.Handle("/song/", songReader(&songMap))
-	http.Handle("/newSong", makeNewSong(&songMap, os.Args[1]))
+	http.Handle("/newSong", createNewSong(&songMap, os.Args[1]))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(r.URL.Path)
@@ -82,6 +77,8 @@ func songListHandler(smp *SongMap) http.Handler {
 			songList = append(songList, key)
 		}
 
+		sort.Strings(songList)
+
 		outJSON, _ := json.Marshal(songList)
 		w.Write(outJSON)
 	})
@@ -97,7 +94,7 @@ func songReader(smp *SongMap) http.Handler {
 	})
 }
 
-func makeNewSong(smp *SongMap, songDir string) http.Handler {
+func createNewSong(smp *SongMap, songDir string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		scrubbedTitle, titleErr := scrubUserTitle(r.PostFormValue("title"))
 		scrubbedBody, bodyErr := scrubUserData(r.PostFormValue("body"))
@@ -119,22 +116,4 @@ func makeNewSong(smp *SongMap, songDir string) http.Handler {
 
 		fmt.Fprintf(w, scrubbedBody)
 	})
-}
-
-func scrubUserData(s string) (string, error) {
-	s = strings.Replace(s, "\r", "\n", -1)
-	if songBodyRegex.Match([]byte(s)) {
-		fmt.Println(s)
-		return s, nil
-	}
-	return "", errors.New("Invalid input")
-}
-
-func scrubUserTitle(s string) (string, error) {
-	s = strings.Replace(s, "\r", "\n", -1)
-	if songTitleRegex.Match([]byte(s)) {
-		fmt.Println(s)
-		return s, nil
-	}
-	return "", errors.New("Invalid input")
 }

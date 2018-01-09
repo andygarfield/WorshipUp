@@ -12,6 +12,6 @@
     "webpack": "^3.10.0"
   },
   "scripts": {
-    "test": "webpack --config webpack.config.js & go install ./server & go run ./server/dataserver.go ./testsongs"
+    "test": "webpack --config webpack.config.js & go build ./server/* && ./dataserver ./testsongs"
   }
 }
