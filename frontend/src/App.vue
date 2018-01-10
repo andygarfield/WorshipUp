@@ -77,7 +77,7 @@
     }
 
     #song-display {
-      /* margin-left: 6px; */
+      padding: 15px;
       flex-basis: 75%;
     }
 

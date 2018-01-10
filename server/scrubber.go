@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-var songBodyRegex, _ = regexp.Compile(`^(!|;|\.|\s)[a-zA-Z\s.\,\;]+`)
+var songBodyRegex, _ = regexp.Compile(`^[!;\.\s][a-zA-Z\s.\,\;\-\']+`)
 var songTitleRegex, _ = regexp.Compile(`[a-zA-Z\s\,()]+`)
 
 func scrubUserData(s string) (string, error) {
