@@ -98,19 +98,36 @@ function isChordLetter(char: string) {
 }
 
 export function decodeSong(sj: SongJSON) {
+    // Return a blank string if there is no song data yet
+    if (!sj) {
+        return ""
+    }
+    // Otherwise, render the data
+
+    // Variable holding the HTML data to be returned
     let outHtml = ""
 
+    // Helper function for quickly adding elements to the rendered output
     let appendElement = (tagName: string, className: string | null, innerText: string) => {
         outHtml += `
             <${tagName}${className ? ` class="` + className + `"`: ``}>${innerText}</${tagName}>
         `;
     }
 
-    // Add title and author
+    // Add title
     appendElement('h1', 'title', sj.title)
+
+    // Add edit and delete buttons
+    outHtml += `
+    <img @click="switchMode('edit')" src="/static/edit.svg" class="modify-btn edit-btn"></img>
+    <img src="/static/delete.svg" class="modify-btn delete-btn"></img>
+    `
+
+    // Add author
     if (sj.author) {
         appendElement('h3', 'author', sj.author)
     }
+
 
     let chordLine = "";
 

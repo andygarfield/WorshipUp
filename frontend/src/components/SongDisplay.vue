@@ -17,8 +17,8 @@
           @click="save">
           Save
         </button>
-        <textarea id="edit-title"></textarea>
-        <textarea id="edit-body"></textarea>
+        <input id="edit-title" placeholder="Title"></textarea>
+        <textarea id="edit-body" placeholder="Song Body"></textarea>
       </div>
     </div>
   </div>
@@ -26,6 +26,7 @@
 
 <script>
   import { mapState } from 'vuex'
+  import { decodeSong, SongJSON } from '../decode'
 
   export default {
     name: "SongDisplay",
@@ -47,10 +48,13 @@
         xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         xhttp.send("title=" + songTitle.value  + "&" + "body=" + songBody.value);
       },
+      switchMode: newMode => state.commit("switchMode", newMode)
     },
     computed: mapState({
       mode: state => state.mode,
-      songData: state => state.songData,
+      songData: state => {
+        return decodeSong(state.songData)
+      },
     }),
   }
 </script>
@@ -62,6 +66,7 @@
 
   h1 {
     margin-top: 0px;
+    margin-bottom: 5px;
   }
 
   .couplet-line {
@@ -105,13 +110,36 @@
     cursor: pointer;
   }
 
+  input#edit-title {
+    border: none;
+    background: #dadada;
+    font-size: 1.5em;
+    padding: 8px;
+  }
+
   textarea#edit-body {
     width: 100%;
     height: 100%;
-    padding: 17px;
+    padding: 8px;
     box-sizing: border-box;
     border: none;
     font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;
+  }
+
+  .modify-btn {
+    height: 15px;
+    width: 15px;
+    padding: 2px;
+    border: 2px solid;
+    border-radius: 3px;
+  }
+
+  .edit-btn {
+    border-color: black;
+  }
+
+  .delete-btn {
+    border-color: #a8050f;
   }
 
 </style>

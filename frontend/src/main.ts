@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import App from './App.vue'
-import { decodeSong } from './decode'
 
 Vue.use(Vuex)
 
@@ -31,7 +30,7 @@ const store = new Vuex.Store({
             let xreq = new XMLHttpRequest();
             xreq.onload = function () {
                 let jsonRes = JSON.parse(this.responseText);
-                commit("loadSongData", decodeSong(jsonRes));
+                commit("loadSongData", jsonRes);
             }
             xreq.open("GET", "/song/" + songTitle, true);
             xreq.send();

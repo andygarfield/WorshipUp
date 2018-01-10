@@ -1,6 +1,4 @@
-*
-!*.*
-!/*
+dataserver
 frontend/dist*
 songjson/opensongmigrate/json
 node_modules*

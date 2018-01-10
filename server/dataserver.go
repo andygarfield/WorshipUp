@@ -27,6 +27,7 @@ func main() {
 	http.Handle("/songlist/", songListHandler(&songMap))
 	http.Handle("/song/", songReader(&songMap))
 	http.Handle("/newSong", createNewSong(&songMap, os.Args[1]))
+	http.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./frontend/src/static"))))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(r.URL.Path)

@@ -50,6 +50,10 @@
     #header-menu {
       height: 15vh;
     }
+
+    #library {
+      background: #ddd;
+    }
   }
 
   @media (min-width: 690px) {
