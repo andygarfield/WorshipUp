@@ -22,25 +22,26 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState } from "vuex"
 
   export default {
     name: "SongList",
     computed: mapState({
       songList: state => state.songList,
     }),
-    created() {
+    created () {
       this.getSongList();
     },
     methods: {
       loadSong (songTitle) {
-        return this.$store.dispatch('loadSong', songTitle)
+        return this.$store.dispatch("loadSong", songTitle)
       },
       newSong () {
-        return this.$store.commit('switchMode', 'edit')
+        this.$store.commit("changeSongData", `{"title": "", "body": ""}`)
+        return this.$store.commit("switchMode", "edit")
       },
       getSongList () {
-        return this.$store.dispatch('getSongList')
+        return this.$store.dispatch("getSongList")
       }
     },
   }

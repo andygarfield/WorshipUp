@@ -14,7 +14,7 @@ const store = new Vuex.Store({
         switchMode (state, newMode) {
             state.mode = newMode;
         },
-        loadSongData (state, songData) {
+        changeSongData (state, songData) {
             state.songData = songData;
         },
         saveSongList (state, songList) {
@@ -30,7 +30,7 @@ const store = new Vuex.Store({
             let xreq = new XMLHttpRequest();
             xreq.onload = function () {
                 let jsonRes = JSON.parse(this.responseText);
-                commit("loadSongData", jsonRes);
+                commit("changeSongData", jsonRes);
             }
             xreq.open("GET", "/song/" + songTitle, true);
             xreq.send();

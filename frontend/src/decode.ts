@@ -6,6 +6,111 @@ interface SongJSON {
     ccli?: string
 }
 
+export function decodeSong(sj: SongJSON) {
+    // Return a blank string if there is no song data yet
+    if (!sj) {
+        return ""
+    }
+    // Otherwise, render the data
+
+    // Variable holding the HTML data to be returned
+    let outHtml = ""
+
+    // Helper function for quickly adding elements to the rendered output
+    let appendElement = (tagName: string, className: string | null, innerText: string) => {
+        outHtml += `
+            <${tagName}${className ? ` class="` + className + `"`: ``}>${innerText}</${tagName}>
+        `;
+    }
+
+    // Add author
+    if (sj.author) {
+        appendElement('h3', 'author', sj.author)
+    }
+
+    
+    let chordLine = "";
+    let pendingLineBreak = false;
+
+    if (!sj.body) {
+        appendElement('div', 'comment', "This song has no content")
+    }
+    // Use the first character of every line to identify its line-type
+    for (let line of sj.body.split("\n")) {
+        let firstChar = line.slice(0, 1)
+
+        // If there is a seperation between the lyrics which isn't before a new
+        // section, insert a <br> tag
+        if (pendingLineBreak && firstChar != "!") {
+            outHtml += '<br>';
+            pendingLineBreak = false;
+        } else if (pendingLineBreak && firstChar == "!") {
+            pendingLineBreak = false;
+        }
+
+        if (line) {
+            switch (line[0]) {
+                //Comment line
+                case ';':
+                    appendElement('div', 'comment', line.slice(1).trim())
+                    break;
+                // Chord line
+                case '.':
+                    // Save the line for use with a lyric line
+                    chordLine = line.slice(1);
+                    break;
+                // Lyric line
+                case ' ':
+                    if (chordLine) {
+                        appendElement('div', 'couplet-line', parseChords(chordLine, line.slice(1)))
+                        chordLine = "";
+                    } else {
+                        appendElement('div', 'lyric', line.slice(1));
+                    }
+                    break;
+                // Section line
+                case '!':
+                    let secondChar = line.slice(1, 2).toLowerCase();
+                    let expanded = '';
+    
+                    // See if the section fits a known type
+                    // The bug here is that any section that begins
+                    // with these letters will be assumed to be these
+                    // sections. There also needs to be an implimentation
+                    // of numbered choruses and bridges and the like
+                    switch (secondChar) {
+                        case "v":
+                            expanded = "Verse " + line.slice(2);
+                            break;
+                        case "c":
+                            expanded = "Chorus";
+                            break;
+                        case "b":
+                            expanded = "Bridge";
+                            break;
+                        case "p":
+                            expanded = "Pre-Chorus";
+                            break;
+                        case "i":
+                            expanded = "Intro";
+                            break;
+                        case "e":
+                            expanded = "Ending";
+                            break;
+                        default:
+                            expanded = line.slice(1);
+                    }
+                    appendElement('section', 'song-section', expanded)
+                    break;
+            }
+        } else {
+            pendingLineBreak = true;
+        }
+
+    }
+    return outHtml;
+}
+
 function parseChords(chordLine: string, bodyLine: string) {
     let chordLineArray = chordLine.split("")
 
@@ -97,99 +202,4 @@ function isChordLetter(char: string) {
         return true
     }
     return false
-}
-
-export function decodeSong(sj: SongJSON) {
-    // Return a blank string if there is no song data yet
-    if (!sj) {
-        return ""
-    }
-    // Otherwise, render the data
-
-    // Variable holding the HTML data to be returned
-    let outHtml = ""
-
-    // Helper function for quickly adding elements to the rendered output
-    let appendElement = (tagName: string, className: string | null, innerText: string) => {
-        outHtml += `
-            <${tagName}${className ? ` class="` + className + `"`: ``}>${innerText}</${tagName}>
-        `;
-    }
-
-    // Add title
-    appendElement('h1', 'title', sj.title)
-
-    // Add edit and delete buttons
-    outHtml += `
-    <img @click="switchMode('edit')" src="/static/edit.svg" class="modify-btn edit-btn"></img>
-    <img src="/static/delete.svg" class="modify-btn delete-btn"></img>
-    `
-
-    // Add author
-    if (sj.author) {
-        appendElement('h3', 'author', sj.author)
-    }
-
-
-    let chordLine = "";
-
-    // Use the first character of every line to identify its line-type
-    for (let line of sj.body.split("\n")) {
-        let firstChar = line.slice(0, 1)
-        switch (line[0]) {
-            //Comment line
-            case ';':
-                appendElement('div', 'comment', line.slice(1).trim())
-                break;
-            // Chord line
-            case '.':
-                // Save the line for use with a lyric line
-                chordLine = line.slice(1);
-                break;
-            // Lyric line
-            case ' ':
-                if (chordLine) {
-                    appendElement('div', 'couplet-line', parseChords(chordLine, line.slice(1)))
-                    chordLine = "";
-                } else {
-                    appendElement('div', 'body', line.slice(1));
-                }
-                break;
-            // Section line
-            case '!':
-                let secondChar = line.slice(1, 2).toLowerCase();
-                let expanded = '';
-
-                // See if the section fits a known type
-                // The bug here is that any section that begins
-                // with these letters will be assumed to be these
-                // sections. There also needs to be an implimentation
-                // of numbered choruses and bridges and the like
-                switch (secondChar) {
-                    case "v":
-                        expanded = "Verse " + line.slice(2);
-                        break;
-                    case "c":
-                        expanded = "Chorus";
-                        break;
-                    case "b":
-                        expanded = "Bridge";
-                        break;
-                    case "p":
-                        expanded = "Pre-Chorus";
-                        break;
-                    case "i":
-                        expanded = "Intro";
-                        break;
-                    case "e":
-                        expanded = "Ending";
-                        break;
-                    default:
-                        expanded = line.slice(1);
-                }
-                appendElement('section', 'song-section', expanded)
-                break;
-        }
-    }
-    return outHtml;
 }

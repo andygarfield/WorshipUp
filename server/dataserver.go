@@ -31,7 +31,7 @@ func main() {
 
 	http.Handle("/songlist/", songListHandler(&songMap))
 	http.Handle("/song/", songReader(&songMap))
-	http.Handle("/newSong", createNewSong(&songMap, os.Args[1]))
+	http.Handle("/songsubmit", submitSong(&songMap, os.Args[1]))
 	http.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./frontend/src/static"))))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -44,6 +44,7 @@ func main() {
 			w.Write(f)
 		}
 	})
+
 	fmt.Println("Starting server on port 8080")
 	http.ListenAndServe(":8080", nil)
 }
@@ -100,14 +101,18 @@ func songReader(smp *SongMap) http.Handler {
 	})
 }
 
-func createNewSong(smp *SongMap, songDir string) http.Handler {
+func submitSong(smp *SongMap, songDir string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Scrub the data of any invalid or malicious input
 		scrubbedTitle, titleErr := scrubUserTitle(r.PostFormValue("title"))
 		scrubbedBody, bodyErr := scrubUserData(r.PostFormValue("body"))
 
-		if titleErr != nil || bodyErr != nil {
-			fmt.Fprintf(w, "Error: Invalid input")
+		if titleErr != nil {
+			fmt.Fprintf(w, fmt.Sprint(titleErr))
+			return
+		}
+		if bodyErr != nil {
+			fmt.Fprintf(w, fmt.Sprint(bodyErr))
 			return
 		}
 
@@ -122,11 +127,8 @@ func createNewSong(smp *SongMap, songDir string) http.Handler {
 
 		serialized, _ := json.Marshal(contents)
 
-		newFilePath := songDir + "/" + scrubbedTitle + ".json"
-		ioutil.WriteFile(newFilePath, serialized, 0677)
-
-		readSong(newFilePath)
-
+		writeFilePath := songDir + "/" + scrubbedTitle + ".json"
+		ioutil.WriteFile(writeFilePath, serialized, 0677)
 		fmt.Fprintf(w, "Form submitted")
 	})
 }

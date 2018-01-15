@@ -1,6 +1,18 @@
 <template>
-  <div id="song-read" v-html="songData">
+  <div>
+    <h1 id="song-title">{{ songTitle }}</h1>
+    <img
+      v-if="songBody"
+      @click="switchMode('edit')"
+      src="/static/edit.svg"
+      class="modify-btn edit-btn">
+    <img
+      v-if="songBody"
+      src="/static/delete.svg"
+      class="modify-btn delete-btn">
+    <div id="song-body" v-html="songBody"></div>
   </div>
+  
 </template>
 
 <script>
@@ -10,10 +22,18 @@
   export default {
     name: "SongReader",
     computed: mapState({
-      songData: state => {
+      songTitle: state => {
+        return state.songData.title
+      },
+      songBody: state => {
         return decodeSong(state.songData)
       }
-    })
+    }),
+    methods: {
+      switchMode (newMode) {
+        this.$store.commit("switchMode", "edit")
+      }
+    }
   }
 </script>
 
@@ -39,6 +59,7 @@
   }
 
   .modify-btn {
+    cursor: pointer;
     height: 15px;
     width: 15px;
     padding: 2px;
@@ -52,5 +73,10 @@
 
   .delete-btn {
     border-color: #a8050f;
+  }
+
+  .comment {
+    color: dimgrey;
+    font-style: italic;
   }
 </style>

@@ -8,31 +8,27 @@ import (
 )
 
 var songTitleRegex, _ = regexp.Compile(`[a-zA-Z\s\,()]+`)
-var songBodyRegex, _ = regexp.Compile(`^[!;. \n][A-Za-z .,;\-'\n]+$`)
+
+// Would remove "%3B" if https://github.com/golang/go/issues/23447 is addressed
+var songBodyRegex, _ = regexp.Compile(`^[!;. ]([0-9A-Za-z .,\-'!?;"’/]|%3B)*$`)
 
 func scrubUserTitle(s string) (string, error) {
 	s = strings.Replace(s, "\r", "\n", -1)
 	if songTitleRegex.Match([]byte(s)) {
 		return s, nil
 	}
-	return "", errors.New("Invalid input")
+	return "", errors.New("Error: Invalid title")
 }
 
 func scrubUserData(s string) (string, error) {
 	s = strings.Replace(s, "\r", "\n", -1)
-
-	fmt.Println(s)
-	lines := strings.Split(s, "\n")
 	s = fmt.Sprintf("%s", s)
-	fmt.Println(s)
 
-	for _, line := range lines {
-		if !songBodyRegex.Match([]byte(line)) {
-			for range line {
-				return "", errors.New("Invalid input")
-			}
+	lines := strings.Split(s, "\n")
+	for i, line := range lines {
+		if !songBodyRegex.Match([]byte(line)) && len(line) > 0 {
+			return "", fmt.Errorf("Error: Invalid input on line\n%d: %s", i+1, line)
 		}
 	}
-
 	return s, nil
 }

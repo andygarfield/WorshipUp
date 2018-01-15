@@ -4,34 +4,45 @@
       <button id="save-button" type="submit" form="edit-song" @click="save">
         Save
       </button>
-      <input id="edit-title" placeholder="Title"></input>
-      <textarea id="edit-body" placeholder="Song Body"></textarea>
+      <input id="edit-title" placeholder="Title" :value="songTitle">
+      <textarea id="edit-body" placeholder="Song Body" :value="songBody"></textarea>
     </div>
   </div>
 </template>
 
 <script>
   export default {
+    computed: {
+      songTitle () {
+        return this.$store.state.songData.title;
+      },
+      songBody () {
+        return this.$store.state.songData.body;
+      }
+    },
     methods: {
       save () {
         let songTitle = document.getElementById("edit-title");
         let songBody = document.getElementById("edit-body");
 
+        // Temporary fix because of Go's splitting key/value pairs by semicolons
+        let newSongBody = songBody.value.split(";").join("%3B")
+
         let xhttp = new XMLHttpRequest();
         
-        xhttp.open("POST", "/newSong");
+        xhttp.open("POST", "/songsubmit");
         xhttp.onload = () => {
-          if (xhttp.response != "Error: Invalid input") {
+          if (xhttp.response.substr(0, 5) != "Error") {
             this.$store.dispatch("getSongList");
             this.$store.dispatch("loadSong", songTitle.value);
             this.$store.commit("switchMode", "read");
           } else {
-            alert("Error: Invalid input")
+            alert(xhttp.response);
           }
         }
 
         xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhttp.send("title=" + songTitle.value  + "&" + "body=" + songBody.value);
+        xhttp.send("title=" + songTitle.value  + "&" + "body=" + newSongBody);
       },
       switchMode: newMode => state.commit("switchMode", newMode)
     },
