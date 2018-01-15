@@ -19,7 +19,7 @@ Mostly copy OpenSong in organization abilities, but have a central server so tha
 - [ ] Make song printable, and preferably not in need of additional formatting. It should print on a second column if the first column overflows
 - [ ] Make the presentation feature
 - [ ] Implement accounts and authorization
-- [ ] Make way to edit songs
+- [x] Make way to edit songs
 - [ ] Create way to make set lists for upcoming services
 - [ ] Implement remote control app for phones
 
