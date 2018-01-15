@@ -7,12 +7,14 @@ import (
 	"net/http"
 	"os"
 	"sort"
+
+	"github.com/gorilla/schema"
 )
 
 // SongJSON is a struct representation of the SongJSON format
 type SongJSON struct {
 	Title        string `json:"title"`
-	Lyrics       string `json:"lyrics"`
+	Body         string `json:"body"`
 	Presentation string `json:"presentation,omitempty"`
 	Author       string `json:"author,omitempty"`
 	CCLI         int    `json:"ccli,omitempty"`
@@ -20,6 +22,9 @@ type SongJSON struct {
 
 // SongMap is a structure to look up the song in-memory
 type SongMap map[string]SongJSON
+
+// Gorilla decoder
+var decoder = schema.NewDecoder()
 
 func main() {
 	songMap := readSongs(os.Args[1])
@@ -103,13 +108,14 @@ func createNewSong(smp *SongMap, songDir string) http.Handler {
 
 		if titleErr != nil || bodyErr != nil {
 			fmt.Fprintf(w, "Error: Invalid input")
+			return
 		}
 
 		songMap := *smp
 
 		contents := SongJSON{
-			Title:  scrubbedTitle,
-			Lyrics: scrubbedBody,
+			Title: scrubbedTitle,
+			Body:  scrubbedBody,
 		}
 
 		songMap[scrubbedTitle] = contents

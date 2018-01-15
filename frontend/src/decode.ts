@@ -1,12 +1,12 @@
 interface SongJSON {
     title: string
-    lyrics: string
+    body: string
     presentation?: string
     author?: string
     ccli?: string
 }
 
-function parseChords(chordLine: string, lyricsLine: string) {
+function parseChords(chordLine: string, bodyLine: string) {
     let chordLineArray = chordLine.split("")
 
     let chordIndices = [];
@@ -39,10 +39,10 @@ function parseChords(chordLine: string, lyricsLine: string) {
 
     // If the lyric line is shorter than the chord line,
     // normalize it to be as long as chord line
-    if (chordLine.length > lyricsLine.length) {
-        let difference = chordLine.length - lyricsLine.length
+    if (chordLine.length > bodyLine.length) {
+        let difference = chordLine.length - bodyLine.length
         for (let i = 0; i < difference; i++) {
-            lyricsLine += " "
+            bodyLine += " "
         }
     }
 
@@ -57,22 +57,24 @@ function parseChords(chordLine: string, lyricsLine: string) {
                 // ... write a beginning
                 clPairs.push([
                     '&nbsp;',
-                    lyricsLine.slice(0, chordIndices[0][0])
+                    bodyLine.slice(0, chordIndices[0][0])
                         .replace(/^\s+|\s+$/g, '&nbsp;'),
                 ])
             } // Otherwise, continue
         } else {
             clPairs.push([
                 chordLine.slice(chordIndices[i - 1][0], chordIndices[i - 1][1]),
-                lyricsLine.slice(chordIndices[i - 1][0], chordIndices[i][0])
+                bodyLine.slice(chordIndices[i - 1][0], chordIndices[i][0])
                     .replace(/^\s+|\s+$/g, '&nbsp;'),
             ])
         }
     }
     // Add final value
     clPairs.push([
-        chordLine.slice(chordIndices[chordIndices.length - 1][0], chordIndices[chordIndices.length - 1][1]),
-        lyricsLine.slice(chordIndices[chordIndices.length - 1][0])
+        chordLine.slice(
+            chordIndices[chordIndices.length - 1][0], chordIndices[chordIndices.length - 1][1]
+        ),
+        bodyLine.slice(chordIndices[chordIndices.length - 1][0])
             .replace(/^\s+|\s+$/g, '&nbsp;'),
     ])
 
@@ -132,7 +134,7 @@ export function decodeSong(sj: SongJSON) {
     let chordLine = "";
 
     // Use the first character of every line to identify its line-type
-    for (let line of sj.lyrics.split("\n")) {
+    for (let line of sj.body.split("\n")) {
         let firstChar = line.slice(0, 1)
         switch (line[0]) {
             //Comment line
@@ -150,7 +152,7 @@ export function decodeSong(sj: SongJSON) {
                     appendElement('div', 'couplet-line', parseChords(chordLine, line.slice(1)))
                     chordLine = "";
                 } else {
-                    appendElement('div', 'lyrics', line.slice(1));
+                    appendElement('div', 'body', line.slice(1));
                 }
                 break;
             // Section line

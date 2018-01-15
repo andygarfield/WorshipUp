@@ -7,9 +7,9 @@ SongJSON (probably going to change the name) is a JSON subset that is suitable f
 *Required*
 The song title as a string.
 
-### `lyrics`
+### `body`
 *Required*
-The `lyrics` value is string representation of the song. Each line in the string begins with a character that denotes what type of information the line contains.
+The `body` value is string representation of the body of the song. Each line in the string begins with a character that denotes what type of information the line contains.
 
 ```javascript
 " ", or "" // A line beginning with a space or any other character contains lyrics
@@ -29,7 +29,7 @@ If there is a line that contains nothing or only white-space and is surrounded b
 **Example 1**
 ```json
 {
-    "lyrics": ";Key of B
+    "body": ";Key of B
 !v1
 .           G              D                 C        D        G
  Come, Thou Fount of every blessing, Tune my heart to sing Thy grace;
@@ -47,7 +47,7 @@ This example starts with a note denoting the key, A section, `v1`, and a number 
 **Example 2**
 ```json
 {
-    "lyrics": "Twinkle, twinkle, little star,
+    "body": "Twinkle, twinkle, little star,
 How I wonder what you are.
 Up above the world so high,
 Like a diamond in the sky.
@@ -67,7 +67,7 @@ This example contains only lyrics and doesn't have a section line. But the lack 
 
 ### `presentation`
 *Optional*
-The `presentation` value represents the order of the song by space-delimited sections. The sections are referenced in the `lyrics` value. Section values are case-insensitive.
+The `presentation` value represents the order of the song by space-delimited sections. The sections are referenced in the `body` value. Section values are case-insensitive.
 
 There are particular section types that also represent a common song sections. These are represented by the implementation as their long name. They are as follows:
 
@@ -90,7 +90,7 @@ Section types that don't fit these patterns are represented as just their origin
     "etc": "..."
 }
 ```
-The `lyrics` value must then contain each the sections `v1`, `c`, `v2`, `b`, and `Interlude` (can also be included as `interlude` as it is case-insensitive). These are interpreted as `Verse 1`, `Chorus`, `Verse 2`, `Bridge`, and `Interlude` respectively.
+The `body` value must then contain each the sections `v1`, `c`, `v2`, `b`, and `Interlude` (can also be included as `interlude` as it is case-insensitive). These are interpreted as `Verse 1`, `Chorus`, `Verse 2`, `Bridge`, and `Interlude` respectively.
 
 ### `author`
 *Optional*

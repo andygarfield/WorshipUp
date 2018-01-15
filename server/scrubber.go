@@ -7,23 +7,32 @@ import (
 	"strings"
 )
 
-var songBodyRegex, _ = regexp.Compile(`^[!;\.\s][a-zA-Z\s.\,\;\-\']+`)
 var songTitleRegex, _ = regexp.Compile(`[a-zA-Z\s\,()]+`)
+var songBodyRegex, _ = regexp.Compile(`^[!;. \n][A-Za-z .,;\-'\n]+$`)
 
-func scrubUserData(s string) (string, error) {
+func scrubUserTitle(s string) (string, error) {
 	s = strings.Replace(s, "\r", "\n", -1)
-	if songBodyRegex.Match([]byte(s)) {
-		fmt.Println(s)
+	if songTitleRegex.Match([]byte(s)) {
 		return s, nil
 	}
 	return "", errors.New("Invalid input")
 }
 
-func scrubUserTitle(s string) (string, error) {
+func scrubUserData(s string) (string, error) {
 	s = strings.Replace(s, "\r", "\n", -1)
-	if songTitleRegex.Match([]byte(s)) {
-		fmt.Println(s)
-		return s, nil
+
+	fmt.Println(s)
+	lines := strings.Split(s, "\n")
+	s = fmt.Sprintf("%s", s)
+	fmt.Println(s)
+
+	for _, line := range lines {
+		if !songBodyRegex.Match([]byte(line)) {
+			for range line {
+				return "", errors.New("Invalid input")
+			}
+		}
 	}
-	return "", errors.New("Invalid input")
+
+	return s, nil
 }

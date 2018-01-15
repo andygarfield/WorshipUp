@@ -57,16 +57,16 @@ func convertOpenSong(r io.Reader) ([]byte, error) {
 	contents, _ := ioutil.ReadAll(r)
 	song := map[string]string{}
 
-	// Get and transform the lyrics section
-	l, lyricsErr := hypher.FindTags("lyrics", bytes.NewReader(contents))
-	if lyricsErr != nil || len(l) == 0 {
-		return nil, errors.New("File had no lyrics tag")
+	// Get and transform the body section
+	l, bodyErr := hypher.FindTags("body", bytes.NewReader(contents))
+	if bodyErr != nil || len(l) == 0 {
+		return nil, errors.New("File had no body tag")
 	}
 
 	l[0].Contents = strings.Replace(l[0].Contents, "\r", "\n", -1)
 	ld := strings.Split(l[0].Contents, "\n")
 
-	var convertedLyrics string
+	var convertedbody string
 	for _, line := range ld {
 		rs := []rune(line)
 
@@ -80,12 +80,12 @@ func convertOpenSong(r io.Reader) ([]byte, error) {
 				}
 			}
 
-			convertedLyrics += "!" + section + "\n"
+			convertedBody += "!" + section + "\n"
 		} else {
-			convertedLyrics += string(rs) + "\n"
+			convertedBody += string(rs) + "\n"
 		}
 	}
-	song["lyrics"] = convertedLyrics
+	song["body"] = convertedBody
 
 	// Get the other values that don't need much conversion
 
