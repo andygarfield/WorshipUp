@@ -25,8 +25,7 @@
         let songTitle = document.getElementById("edit-title");
         let songBody = document.getElementById("edit-body");
 
-        // Temporary fix because of Go's splitting key/value pairs by semicolons
-        let newSongBody = songBody.value.split(";").join("%3B")
+        let newSongBody = encodeURI(songBody.value)
 
         let xhttp = new XMLHttpRequest();
         

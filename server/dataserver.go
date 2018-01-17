@@ -7,80 +7,34 @@ import (
 	"net/http"
 	"os"
 	"sort"
-
-	"github.com/gorilla/schema"
+	"time"
 )
 
-// SongJSON is a struct representation of the SongJSON format
-type SongJSON struct {
-	Title        string `json:"title"`
-	Body         string `json:"body"`
-	Presentation string `json:"presentation,omitempty"`
-	Author       string `json:"author,omitempty"`
-	CCLI         int    `json:"ccli,omitempty"`
-}
+// Songs is a structure to look up a song data in memory
+type Songs map[string]SongJSON
 
-// SongMap is a structure to look up the song in-memory
-type SongMap map[string]SongJSON
-
-// Gorilla decoder
-var decoder = schema.NewDecoder()
+// Services is a structure to look up a service according to date
+type Services map[time.Time][]SongJSON
 
 func main() {
-	songMap := readSongs(os.Args[1])
+	songs := readSongs(os.Args[1])
+	// serviceMap
 
-	http.Handle("/songlist/", songListHandler(&songMap))
-	http.Handle("/song/", songReader(&songMap))
-	http.Handle("/songsubmit", submitSong(&songMap, os.Args[1]))
-	http.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("./frontend/src/static"))))
-
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println(r.URL.Path)
-		if r.URL.Path == "/" {
-			f, _ := ioutil.ReadFile("./frontend/index.html")
-			w.Write(f)
-		} else {
-			f, _ := ioutil.ReadFile("./frontend/" + r.URL.Path)
-			w.Write(f)
-		}
-	})
+	http.Handle("/songlist/", songListHandler(&songs))
+	http.Handle("/song/", songReader(&songs))
+	http.Handle("/songsubmit", submitSong(&songs, os.Args[1]))
+	http.Handle("/", http.FileServer(http.Dir("./frontend")))
 
 	fmt.Println("Starting server on port 8080")
 	http.ListenAndServe(":8080", nil)
 }
 
-func readSongs(songDir string) SongMap {
-	songFiles, err := ioutil.ReadDir(songDir)
-	if err != nil {
-		panic(err)
-	}
-
-	outSongMap := SongMap{}
-
-	for _, sf := range songFiles {
-		fp := songDir + "/" + sf.Name()
-		newSong := readSong(fp)
-
-		outSongMap[newSong.Title] = newSong
-	}
-
-	return outSongMap
-}
-
-func readSong(filePath string) SongJSON {
-	b, _ := ioutil.ReadFile(filePath)
-	var newSong SongJSON
-	json.Unmarshal(b, &newSong)
-
-	return newSong
-}
-
-func songListHandler(smp *SongMap) http.Handler {
+func songListHandler(sp *Songs) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		songMap := *smp
+		songs := *sp
 		songList := []string{}
 
-		for key := range songMap {
+		for key := range songs {
 			songList = append(songList, key)
 		}
 
@@ -91,17 +45,17 @@ func songListHandler(smp *SongMap) http.Handler {
 	})
 }
 
-func songReader(smp *SongMap) http.Handler {
+func songReader(sp *Songs) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		songMap := *smp
+		songs := *sp
 		songTitle := r.URL.Path[len("/song/"):]
-		b, _ := json.Marshal(songMap[songTitle])
+		b, _ := json.Marshal(songs[songTitle])
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(b)
 	})
 }
 
-func submitSong(smp *SongMap, songDir string) http.Handler {
+func submitSong(sp *Songs, songDir string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Scrub the data of any invalid or malicious input
 		scrubbedTitle, titleErr := scrubUserTitle(r.PostFormValue("title"))
@@ -116,14 +70,14 @@ func submitSong(smp *SongMap, songDir string) http.Handler {
 			return
 		}
 
-		songMap := *smp
+		songs := *sp
 
 		contents := SongJSON{
 			Title: scrubbedTitle,
 			Body:  scrubbedBody,
 		}
 
-		songMap[scrubbedTitle] = contents
+		songs[scrubbedTitle] = contents
 
 		serialized, _ := json.Marshal(contents)
 

@@ -52,6 +52,18 @@ Install node packages
 yarn install
 ```
 
+# Running inside a Docker container
+Install [Docker](https://www.docker.com/)
+
+Build the image
+```bash
+docker build -t worshipup .
+```
+Run the container
+```bash
+docker run --rm -ti -p 8080:8080 -v $PWD:/run worshipup
+```
+
 ## Running
 To run the application
 ```bash

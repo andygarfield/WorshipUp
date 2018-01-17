@@ -3,6 +3,11 @@
     <h1 id="song-title">{{ songTitle }}</h1>
     <img
       v-if="songBody"
+      @click="addToService(songTitle)"
+      src="/static/plus.svg"
+      class="modify-btn servadd-btn">
+    <img
+      v-if="songBody"
       @click="switchMode('edit')"
       src="/static/edit.svg"
       class="modify-btn edit-btn">
@@ -32,6 +37,9 @@
     methods: {
       switchMode (newMode) {
         this.$store.commit("switchMode", "edit")
+      },
+      addToService (songTitle) {
+        this.$store.commit("addToService", songTitle)
       }
     }
   }
@@ -73,6 +81,10 @@
 
   .delete-btn {
     border-color: #a8050f;
+  }
+
+  .servadd-btn {
+    border-color: #0087ee;
   }
 
   .comment {

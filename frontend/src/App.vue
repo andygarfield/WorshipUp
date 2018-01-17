@@ -8,6 +8,7 @@
         @newSong="newSong">
       </Library>
       <SongDisplay id="song-display"></SongDisplay>
+      <ServiceOrder id="service-order"></ServiceOrder>
     </div>
   </div>
 </template>
@@ -16,6 +17,7 @@
   import HeaderMenu from './components/HeaderMenu.vue'
   import Library from './components/Library.vue'
   import SongDisplay from './components/SongDisplay.vue'
+  import ServiceOrder from './components/ServiceOrder.vue'
   import decodeSong from './decode.ts'
 
   export default {
@@ -24,6 +26,7 @@
       HeaderMenu: HeaderMenu,
       Library: Library,
       SongDisplay: SongDisplay,
+      ServiceOrder: ServiceOrder,
     },
     data() {
       return {
@@ -78,9 +81,12 @@
 
     #song-display {
       padding: 15px;
-      flex-basis: 75%;
+      flex-basis: 50%;
     }
 
-    #service-order {}
+    #service-order {
+      flex-basis: 25%;
+      background: #ddd;
+    }
   }
 </style>
