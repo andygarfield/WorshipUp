@@ -25,6 +25,21 @@ Mostly copy OpenSong in organization abilities, but have a central server so tha
 
 
 ## Installation
+The easiest method is to use Docker, though you can install it your base system
+
+# Docker
+First, install [Docker](https://www.docker.com/)
+
+Build the image
+```bash
+docker build -t worshipup .
+```
+Run the container
+```bash
+docker run --rm -ti -p 8080:8080 worshipup
+```
+
+# macOS
 A few prerequisites. Recommended to use [Homebrew](https://brew.sh/).
 
 Install Yarn (and thus Node.js)
@@ -50,18 +65,6 @@ cd ~/go/src/github.com/andygarfield/worshipup
 Install node packages
 ```bash
 yarn install
-```
-
-# Running inside a Docker container
-Install [Docker](https://www.docker.com/)
-
-Build the image
-```bash
-docker build -t worshipup .
-```
-Run the container
-```bash
-docker run --rm -ti -p 8080:8080 worshipup
 ```
 
 ## Running
