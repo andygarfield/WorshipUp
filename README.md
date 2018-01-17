@@ -61,7 +61,7 @@ docker build -t worshipup .
 ```
 Run the container
 ```bash
-docker run --rm -ti -p 8080:8080 -v $PWD:/run worshipup
+docker run --rm -ti -p 8080:8080 worshipup
 ```
 
 ## Running
