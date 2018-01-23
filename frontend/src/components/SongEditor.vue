@@ -25,7 +25,7 @@
         let songTitle = document.getElementById("edit-title");
         let songBody = document.getElementById("edit-body");
 
-        let newSongBody = encodeURI(songBody.value)
+        let newSongBody = encodeURIComponent(songBody.value)
 
         let xhttp = new XMLHttpRequest();
         

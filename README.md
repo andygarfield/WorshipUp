@@ -30,10 +30,17 @@ The easiest method is to use Docker, though you can install it your base system.
 ### Docker
 First, install [Docker](https://www.docker.com/)
 
+Clone this repo and `cd` into it
+```bash
+git clone https://github.com/andygarfield/worshipup.git
+cd worshipup
+```
+
 Build the image
 ```bash
 docker build -t worshipup .
 ```
+
 Run the container
 ```bash
 docker run --rm -ti -p 8080:8080 worshipup

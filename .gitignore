@@ -3,3 +3,4 @@ frontend/dist*
 songjson/opensongmigrate/json
 node_modules*
 *.DS_Store
+*.db

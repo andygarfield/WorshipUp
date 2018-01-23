@@ -4,10 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 	"sort"
 	"time"
+
+	"github.com/boltdb/bolt"
 )
 
 // Songs is a structure to look up a song data in memory
@@ -20,7 +23,24 @@ func main() {
 	songs := readSongs(os.Args[1])
 	// serviceMap
 
-	http.Handle("/songlist/", songListHandler(&songs))
+	// Create database and add buckets
+	db, err := bolt.Open("library.db", 0600, nil)
+	if err != nil {
+		log.Fatalf("Open bolt database: %s", err)
+	}
+	db.Update(func(tx *bolt.Tx) error {
+		_, err := tx.CreateBucketIfNotExists([]byte("Songs"))
+		if err != nil {
+			return fmt.Errorf("Create songs bucket: %s", err)
+		}
+		_, err = tx.CreateBucketIfNotExists([]byte("Sets"))
+		if err != nil {
+			return fmt.Errorf("Create sets bucket: %s", err)
+		}
+		return nil
+	})
+
+	http.Handle("/songlist/", getSongList(&songs))
 	http.Handle("/song/", songReader(&songs))
 	http.Handle("/songsubmit", submitSong(&songs, os.Args[1]))
 	http.Handle("/", http.FileServer(http.Dir("./frontend")))
@@ -29,7 +49,7 @@ func main() {
 	http.ListenAndServe(":8080", nil)
 }
 
-func songListHandler(sp *Songs) http.Handler {
+func getSongList(sp *Songs) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		songs := *sp
 		songList := []string{}
@@ -85,4 +105,8 @@ func submitSong(sp *Songs, songDir string) http.Handler {
 		ioutil.WriteFile(writeFilePath, serialized, 0677)
 		fmt.Fprintf(w, "Form submitted")
 	})
+}
+
+func getServiceList(s *Services) {
+
 }
