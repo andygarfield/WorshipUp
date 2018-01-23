@@ -3,10 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 	"sort"
 	"time"
 
@@ -20,10 +18,7 @@ type Songs map[string]SongJSON
 type Services map[time.Time][]SongJSON
 
 func main() {
-	songs := readSongs(os.Args[1])
-	// serviceMap
-
-	// Create database and add buckets
+	// Create database and add buckets if they don't exist
 	db, err := bolt.Open("library.db", 0600, nil)
 	if err != nil {
 		log.Fatalf("Open bolt database: %s", err)
@@ -40,23 +35,28 @@ func main() {
 		return nil
 	})
 
-	http.Handle("/songlist/", getSongList(&songs))
-	http.Handle("/song/", songReader(&songs))
-	http.Handle("/songsubmit", submitSong(&songs, os.Args[1]))
+	http.Handle("/songlist/", getSongList(db))
+	http.Handle("/song/", songReader(db))
+	http.Handle("/songsubmit", submitSong(db))
 	http.Handle("/", http.FileServer(http.Dir("./frontend")))
 
 	fmt.Println("Starting server on port 8080")
 	http.ListenAndServe(":8080", nil)
 }
 
-func getSongList(sp *Songs) http.Handler {
+func getSongList(db *bolt.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		songs := *sp
 		songList := []string{}
 
-		for key := range songs {
-			songList = append(songList, key)
-		}
+		db.View(func(tx *bolt.Tx) error {
+			b := tx.Bucket([]byte("Songs"))
+			c := b.Cursor()
+
+			for k, _ := c.First(); k != nil; k, _ = c.Next() {
+				songList = append(songList, string(k))
+			}
+			return nil
+		})
 
 		sort.Strings(songList)
 
@@ -65,17 +65,23 @@ func getSongList(sp *Songs) http.Handler {
 	})
 }
 
-func songReader(sp *Songs) http.Handler {
+func songReader(db *bolt.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		songs := *sp
 		songTitle := r.URL.Path[len("/song/"):]
-		b, _ := json.Marshal(songs[songTitle])
+		var songData []byte
+
+		db.View(func(tx *bolt.Tx) error {
+			b := tx.Bucket([]byte("Songs"))
+			songData = b.Get([]byte(songTitle))
+			return nil
+		})
+
 		w.Header().Set("Content-Type", "application/json")
-		w.Write(b)
+		w.Write(songData)
 	})
 }
 
-func submitSong(sp *Songs, songDir string) http.Handler {
+func submitSong(db *bolt.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Scrub the data of any invalid or malicious input
 		scrubbedTitle, titleErr := scrubUserTitle(r.PostFormValue("title"))
@@ -90,19 +96,18 @@ func submitSong(sp *Songs, songDir string) http.Handler {
 			return
 		}
 
-		songs := *sp
-
 		contents := SongJSON{
 			Title: scrubbedTitle,
 			Body:  scrubbedBody,
 		}
 
-		songs[scrubbedTitle] = contents
-
 		serialized, _ := json.Marshal(contents)
 
-		writeFilePath := songDir + "/" + scrubbedTitle + ".json"
-		ioutil.WriteFile(writeFilePath, serialized, 0677)
+		db.Update(func(tx *bolt.Tx) error {
+			b := tx.Bucket([]byte("Songs"))
+			b.Put([]byte(scrubbedTitle), serialized)
+			return nil
+		})
 		fmt.Fprintf(w, "Form submitted")
 	})
 }
