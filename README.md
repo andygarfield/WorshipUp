@@ -46,6 +46,8 @@ Run the container
 docker run --rm -ti -p 8080:8080 worshipup
 ```
 
+Then go to http://localhost:8080
+
 ### macOS
 A few prerequisites. Recommended to use [Homebrew](https://brew.sh/).
 
@@ -74,7 +76,6 @@ Install node packages
 yarn install
 ```
 
-## Running
 To run the application
 ```bash
 yarn run test
@@ -96,4 +97,3 @@ The desire is to have the ability to smoothly upgrade to a more complicated conf
 ![Architecture Chart](./architecture.svg)
 
 [source](https://www.lucidchart.com/invitations/accept/c311a15e-7224-4a86-ba2f-b82a73967ef2)
-

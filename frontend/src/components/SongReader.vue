@@ -76,7 +76,7 @@
   }
 
   .edit-btn {
-    border-color: #d37f00;
+    border-color: #ff9900;
   }
 
   .delete-btn {
