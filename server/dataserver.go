@@ -6,10 +6,16 @@ import (
 	"log"
 	"net/http"
 	"sort"
+	"time"
 
-	"github.com/andygarfield/worshipup/pkg/worshipup"
 	"github.com/boltdb/bolt"
 )
+
+// Songs is a structure to look up a song data in memory
+type Songs map[string]SongJSON
+
+// Services is a structure to look up a service according to date
+type Services map[time.Time][]SongJSON
 
 func main() {
 	// Create database and add buckets if they don't exist
@@ -90,7 +96,7 @@ func submitSong(db *bolt.DB) http.Handler {
 			return
 		}
 
-		contents := worshipup.SongJSON{
+		contents := SongJSON{
 			Title: scrubbedTitle,
 			Body:  scrubbedBody,
 		}
@@ -104,4 +110,8 @@ func submitSong(db *bolt.DB) http.Handler {
 		})
 		fmt.Fprintf(w, "Form submitted")
 	})
+}
+
+func getServiceList(s *Services) {
+
 }
