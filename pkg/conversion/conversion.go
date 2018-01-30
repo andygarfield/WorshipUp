@@ -72,7 +72,7 @@ func ImportSetDir(db *bolt.DB, dir, setType string) error {
 			ImportSet(db, openSongSet(b))
 		}
 	} else {
-		return fmt.Errorf("%s is not implimented as in import type at this time", setType)
+		return fmt.Errorf("%s is not implemented as an import type at this time", setType)
 	}
 
 	return nil

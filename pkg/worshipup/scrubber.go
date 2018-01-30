@@ -1,4 +1,4 @@
-package main
+package worshipup
 
 import (
 	"errors"
@@ -8,11 +8,10 @@ import (
 )
 
 var songTitleRegex, _ = regexp.Compile(`[a-zA-Z\s\,()]+`)
+var songBodyRegex, _ = regexp.Compile(`^[!;. ]([0-9A-Za-z .,\-'!?;"’/])*$`)
 
-// Would remove "%3B" if https://github.com/golang/go/issues/23447 is addressed
-var songBodyRegex, _ = regexp.Compile(`^[!;. ]([0-9A-Za-z .,\-'!?;"’/]|%3B)*$`)
-
-func scrubUserTitle(s string) (string, error) {
+// ScrubUserTitle takes an input title passes it through a white-list to see if it's valid
+func ScrubUserTitle(s string) (string, error) {
 	s = strings.Replace(s, "\r", "\n", -1)
 	if songTitleRegex.Match([]byte(s)) {
 		return s, nil
@@ -20,7 +19,8 @@ func scrubUserTitle(s string) (string, error) {
 	return "", errors.New("Error: Invalid title")
 }
 
-func scrubUserData(s string) (string, error) {
+// ScrubUserData takes an input song body and passes it through a white-list to see if it's valid
+func ScrubUserData(s string) (string, error) {
 	s = strings.Replace(s, "\r", "\n", -1)
 	s = fmt.Sprintf("%s", s)
 

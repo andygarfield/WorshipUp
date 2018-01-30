@@ -14,6 +14,7 @@ import (
 func main() {
 	// Create database and add buckets if they don't exist
 	db, err := bolt.Open("library.db", 0600, nil)
+
 	if err != nil {
 		log.Fatalf("Open bolt database: %s", err)
 	}
@@ -78,8 +79,8 @@ func songReader(db *bolt.DB) http.Handler {
 func submitSong(db *bolt.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Scrub the data of any invalid or malicious input
-		scrubbedTitle, titleErr := scrubUserTitle(r.PostFormValue("title"))
-		scrubbedBody, bodyErr := scrubUserData(r.PostFormValue("body"))
+		scrubbedTitle, titleErr := worshipup.ScrubUserTitle(r.PostFormValue("title"))
+		scrubbedBody, bodyErr := worshipup.ScrubUserData(r.PostFormValue("body"))
 
 		if titleErr != nil {
 			fmt.Fprintf(w, fmt.Sprint(titleErr))
