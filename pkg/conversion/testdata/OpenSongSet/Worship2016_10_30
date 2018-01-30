@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<set name="Worship2016_10_30">
+  <slide_groups>
+    <slide_group name="Welcome" type="external" filename="C:\Users\mvilloria\Google Drive\Jump Backup 012113\Vintage Faith Community\Teachings\Welcome.pptx"
+      application="presentation" loop_presentation="false" loop="false">
+      <notes></notes>
+    </slide_group>
+    <slide_group name="This I Believe (The Creed)" type="song" presentation="" path="" />
+    <slide_group name="Desert Song" type="song" presentation="" path="" />
+    <slide_group name="Prayer" type="external" filename="C:\Users\mvilloria\Google Drive\Jump Backup 012113\Vintage Faith Community\Teachings\Prayer.pptx"
+      application="presentation" loop_presentation="false" loop="false">
+      <notes></notes>
+    </slide_group>
+    <slide_group name="Though You Slay Me" type="song" presentation="" path="" />
+    <slide_group name="Whom Shall I Fear (God Of Angel Armies)" type="song" presentation="" path="" />
+  </slide_groups>
+</set>

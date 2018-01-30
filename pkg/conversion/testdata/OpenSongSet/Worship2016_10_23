@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<set name="Worship2016_10_23">
+  <slide_groups>
+    <slide_group name="Welcome" type="external" filename="C:\Users\mvilloria\Google Drive\Jump Backup 012113\Vintage Faith Community\Teachings\Welcome.pptx"
+      application="presentation" loop_presentation="false" loop="false">
+      <notes></notes>
+    </slide_group>
+    <slide_group name="Above All" type="song" presentation="" path="" />
+    <slide_group name="Psalm 46" type="song" presentation="" path="" />
+    <slide_group name="Prayer" type="external" filename="C:\Users\mvilloria\Google Drive\Jump Backup 012113\Vintage Faith Community\Teachings\Prayer.pptx"
+      application="presentation" loop_presentation="false" loop="false">
+      <notes></notes>
+    </slide_group>
+    <slide_group name="Stronger" type="song" presentation="" path="" />
+    <slide_group name="Are You Washed" type="song" presentation="" path="" />
+  </slide_groups>
+</set>

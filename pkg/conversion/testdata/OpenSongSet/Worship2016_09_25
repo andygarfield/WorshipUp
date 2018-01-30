@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<set name="Worship2016_09_25">
+  <slide_groups>
+    <slide_group name="Your Love Is Strong" type="song" presentation="" path="" />
+    <slide_group name="Give Me Jesus" type="song" presentation="" path="" />
+    <slide_group type="scripture" name="Ephesians 5:2" print="true" seconds="0" loop="false" transition="0">
+      <title>Ephesians 5:2</title>
+      <subtitle>NASB</subtitle>
+      <notes></notes>
+      <slides>
+        <slide>
+
+          <body>2 And walk in love, just as Christ also loved you and gave Himself up for us, an offering and a sacrifice to God
+            as a fragrant aroma.</body>
+        </slide>
+      </slides>
+    </slide_group>
+    <slide_group name="Take My Life" type="song" presentation="" path="" />
+    <slide_group name="Brokenness Aside" type="song" presentation="" path="" />
+  </slide_groups>
+</set>

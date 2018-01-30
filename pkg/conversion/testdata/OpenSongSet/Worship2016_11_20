@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<set name="Worship2016_11_20">
+  <slide_groups>
+    <slide_group name="Welcome" type="external" filename="C:\Users\mvilloria\Google Drive\Jump Backup 012113\Vintage Faith Community\Teachings\Welcome.pptx"
+      application="presentation" loop_presentation="false" loop="false">
+      <notes></notes>
+    </slide_group>
+    <slide_group name="How He Loves" type="song" presentation="" path="" />
+    <slide_group name="It Is Well With My Soul" type="song" presentation="" path="" />
+    <slide_group name="Prayer" type="external" filename="C:\Users\mvilloria\Google Drive\Jump Backup 012113\Vintage Faith Community\Teachings\Prayer.pptx"
+      application="presentation" loop_presentation="false" loop="false">
+      <notes></notes>
+    </slide_group>
+    <slide_group name="In Christ Alone" type="song" presentation="" path="" />
+    <slide_group name="Jesus, I Love You" type="song" presentation="" path="" transition="0" />
+  </slide_groups>
+</set>
