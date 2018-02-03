@@ -1,5 +1,6 @@
 <template>
   <div id="main">
+    <Settings v-if="settingsOn"></Settings>
     <HeaderMenu id="header-menu">
     </HeaderMenu>
     <div id="app-body">
@@ -18,7 +19,9 @@
   import Library from './components/Library.vue'
   import SongDisplay from './components/SongDisplay.vue'
   import ServiceOrder from './components/ServiceOrder.vue'
+  import Settings from  './components/Settings.vue'
   import decodeSong from './decode.ts'
+  import { mapState } from 'vuex';
 
   export default {
     name: 'app',
@@ -27,7 +30,11 @@
       Library: Library,
       SongDisplay: SongDisplay,
       ServiceOrder: ServiceOrder,
+      Settings: Settings,
     },
+    computed : mapState({
+      settingsOn: state => state.settingsOn,
+    }),
     data() {
       return {
         songHtml: "",
@@ -45,48 +52,48 @@
 
 <style>
   @media (min-width: 0px) {
-    body {
-      font-family: 'Fira Sans', sans-serif;
-      margin: 0px;
+    #main {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
     }
 
     #header-menu {
-      height: 15vh;
+      display: flex;
+      flex-direction: row;
+      height: 15%;
+      flex-basis: auto;
     }
 
-    #library {
-      background: #ddd;
-    }
-  }
-
-  @media (min-width: 690px) {
     #app-body {
       display: flex;
       flex-direction: row;
-      height: 85vh;
+      height: 85%;
+      flex-basis: auto;
     }
-
-    #app-body>* {
-      overflow: auto;
-    }
-
+    
     #library {
+      display: flex;
+      flex-direction: column;
+      width: 25%;
       background: #ddd;
-      flex-basis: 25%;
-    }
-
-    #library>* {
-      cursor: pointer;
     }
 
     #song-display {
-      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
       flex-basis: 50%;
+      overflow: auto;
     }
 
     #service-order {
       flex-basis: 25%;
       background: #ddd;
     }
+  }
+
+  @media (min-width: 690px) {
+    
   }
 </style>

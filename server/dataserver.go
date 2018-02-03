@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"sort"
 
+	"github.com/NYTimes/gziphandler"
+
 	"github.com/andygarfield/worshipup/pkg/worshipup"
 	"github.com/boltdb/bolt"
 )
@@ -30,10 +32,10 @@ func main() {
 		return nil
 	})
 
-	http.Handle("/songlist/", getSongList(db))
-	http.Handle("/song/", songReader(db))
+	http.Handle("/songlist/", gziphandler.GzipHandler(getSongList(db)))
+	http.Handle("/song/", songHandler(db))
 	http.Handle("/songsubmit", submitSong(db))
-	http.Handle("/", http.FileServer(http.Dir("./frontend")))
+	http.Handle("/", gziphandler.GzipHandler(http.FileServer(http.Dir("./frontend"))))
 
 	fmt.Println("Starting server on port 8080")
 	http.ListenAndServe(":8080", nil)
@@ -60,19 +62,27 @@ func getSongList(db *bolt.DB) http.Handler {
 	})
 }
 
-func songReader(db *bolt.DB) http.Handler {
+func songHandler(db *bolt.DB) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		songTitle := r.URL.Path[len("/song/"):]
-		var songData []byte
+		if r.Method == "GET" {
+			songTitle := r.URL.Path[len("/song/"):]
+			var songData []byte
 
-		db.View(func(tx *bolt.Tx) error {
-			b := tx.Bucket([]byte("Songs"))
-			songData = b.Get([]byte(songTitle))
-			return nil
-		})
+			db.View(func(tx *bolt.Tx) error {
+				b := tx.Bucket([]byte("Songs"))
+				songData = b.Get([]byte(songTitle))
+				return nil
+			})
 
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(songData)
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(songData)
+		} else if r.Method == "DELETE" {
+			db.Update(func(tx *bolt.Tx) error {
+				b := tx.Bucket([]byte("Songs"))
+				b.Delete([]byte(r.URL.Path[len("/song/"):]))
+				return nil
+			})
+		}
 	})
 }
 

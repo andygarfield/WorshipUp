@@ -1,11 +1,15 @@
 <template>
-  <div>
+  <div id="library">
     <div id="library-top-menu">
       <div
       id="add-button"
       @click="newSong">
-        Add New
+          Add New
       </div>
+      <img
+      src="/static/settings.svg"
+      id="settings-button"
+      @click="toggleSettings()" />
     </div>
     <div id="library-elements">
       <ul>
@@ -42,19 +46,40 @@
       },
       getSongList () {
         return this.$store.dispatch("getSongList")
-      }
+      },
+      toggleSettings () {
+        return this.$store.commit("toggleSettings")
+      },
     },
   }
 </script>
 
 <style>
 
-#add-button {
-  height: 30px;
+#library-top-menu {
   display: flex;
+}
+
+#library-elements {
+  display: flex;
+  height: 100%;
+  overflow: auto;
+}
+
+#add-button {
+  display: flex;
+  flex-grow: 1;
+  height: 30px;
   background: lightgreen;
   justify-content: center;
   align-items: center;
+}
+
+#settings-button {
+  flex-basis: 24px;
+  height: 24px;
+  padding: 3px;
+  background: #929292;
 }
 
 </style>

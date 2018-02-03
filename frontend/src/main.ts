@@ -9,6 +9,7 @@ const store = new Vuex.Store({
         mode: "read",
         songData: "",
         songList: [],
+        settingsOn: false,
     },
     mutations: {
         switchMode (state, newMode) {
@@ -19,7 +20,10 @@ const store = new Vuex.Store({
         },
         saveSongList (state, songList) {
             state.songList = songList;
-        }
+        },
+        toggleSettings (state) {
+            state.settingsOn = !state.settingsOn;
+        },
     },
     actions: {
         loadSong({commit, state}, songTitle) {

@@ -86,6 +86,7 @@
     width: 100%;
     height: 100%;
     padding: 8px;
+    font-size: 10pt;
     box-sizing: border-box;
     border: none;
     font-family: Consolas, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Courier New, monospace;

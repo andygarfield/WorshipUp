@@ -1,20 +1,23 @@
 <template>
   <div>
     <h1 id="song-title">{{ songTitle }}</h1>
-    <img
-      v-if="songBody"
-      @click="addToService(songTitle)"
-      src="/static/plus.svg"
-      class="modify-btn servadd-btn">
-    <img
-      v-if="songBody"
-      @click="switchMode('edit')"
-      src="/static/edit.svg"
-      class="modify-btn edit-btn">
-    <img
-      v-if="songBody"
-      src="/static/delete.svg"
-      class="modify-btn delete-btn">
+    <div id="action-icons">
+      <img
+        v-if="songBody"
+        @click="addToService(songTitle)"
+        src="/static/plus.svg"
+        class="modify-btn servadd-btn">
+      <img
+        v-if="songBody"
+        @click="switchMode('edit')"
+        src="/static/edit.svg"
+        class="modify-btn edit-btn">
+      <img
+        v-if="songBody"
+        @click="deleteSong"
+        src="/static/delete.svg"
+        class="modify-btn delete-btn">
+    </div>
     <div id="song-body" v-html="songBody"></div>
   </div>
   
@@ -38,8 +41,16 @@
       switchMode (newMode) {
         this.$store.commit("switchMode", "edit")
       },
-      addToService (songTitle) {
-        this.$store.commit("addToService", songTitle)
+      addToService () {
+        this.$store.commit("addToService", this.songTitle)
+      },
+      deleteSong () {
+        let xreq = new XMLHttpRequest();
+        xreq.onload = () => {
+          this.$store.dispatch("getSongList")
+        }
+        xreq.open("DELETE", "/song/" + this.songTitle, true);
+        xreq.send();
       }
     }
   }
@@ -49,6 +60,10 @@
   h1 {
     margin-top: 0px;
     margin-bottom: 5px;
+  }
+
+  #song-body {
+    font-size: 12pt;
   }
 
   .couplet-line {
@@ -73,6 +88,11 @@
     padding: 2px;
     border: 2px solid;
     border-radius: 3px;
+  }
+
+  .action-icons {
+    display: flex;
+    flex-direction: row;
   }
 
   .edit-btn {

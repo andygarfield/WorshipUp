@@ -23,7 +23,7 @@ module.exports = {
     poll: 1000,
     ignored: /node_modules/
   },
-  // plugins: [
-  //   new UglifyJsPlugin()
-  // ]
+  plugins: [
+    new UglifyJsPlugin()
+  ]
 };
