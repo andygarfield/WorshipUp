@@ -69,7 +69,7 @@ func ImportSetDir(db *bolt.DB, dir, setType string) error {
 		for _, r := range readers {
 			b, _ := ioutil.ReadAll(r)
 
-			ImportSet(db, openSongSet(b))
+			ImportSet(db, OpenSongSet(b))
 		}
 	} else {
 		return fmt.Errorf("%s is not implemented as an import type at this time", setType)
@@ -85,7 +85,7 @@ func ImportSongDir(db *bolt.DB, dir, songType string) error {
 		for _, r := range readers {
 			b, _ := ioutil.ReadAll(r)
 
-			ImportSong(db, openSongSong(b))
+			ImportSong(db, OpenSongSong(b))
 		}
 	} else {
 		return fmt.Errorf("%s is not implimented as in import type at this time", songType)

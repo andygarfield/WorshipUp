@@ -47,7 +47,8 @@
       deleteSong () {
         let xreq = new XMLHttpRequest();
         xreq.onload = () => {
-          this.$store.dispatch("getSongList")
+          this.$store.dispatch("getSongList");
+          this.$store.commit("changeSongData", "");
         }
         xreq.open("DELETE", "/song/" + this.songTitle, true);
         xreq.send();

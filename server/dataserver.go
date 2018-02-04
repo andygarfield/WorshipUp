@@ -3,9 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"sort"
+
+	"github.com/andygarfield/worshipup/pkg/conversion"
 
 	"github.com/NYTimes/gziphandler"
 
@@ -32,9 +35,10 @@ func main() {
 		return nil
 	})
 
-	http.Handle("/songlist/", gziphandler.GzipHandler(getSongList(db)))
+	http.Handle("/songlist/", getSongList(db))
 	http.Handle("/song/", songHandler(db))
-	http.Handle("/songsubmit", submitSong(db))
+	http.Handle("/songsubmit/", submitSong(db))
+	http.Handle("/upload/", uploadSongs(db))
 	http.Handle("/", gziphandler.GzipHandler(http.FileServer(http.Dir("./frontend"))))
 
 	fmt.Println("Starting server on port 8080")
@@ -42,7 +46,7 @@ func main() {
 }
 
 func getSongList(db *bolt.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return gziphandler.GzipHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		songList := []string{}
 
 		db.View(func(tx *bolt.Tx) error {
@@ -59,11 +63,11 @@ func getSongList(db *bolt.DB) http.Handler {
 
 		outJSON, _ := json.Marshal(songList)
 		w.Write(outJSON)
-	})
+	}))
 }
 
 func songHandler(db *bolt.DB) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return gziphandler.GzipHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method == "GET" {
 			songTitle := r.URL.Path[len("/song/"):]
 			var songData []byte
@@ -83,7 +87,7 @@ func songHandler(db *bolt.DB) http.Handler {
 				return nil
 			})
 		}
-	})
+	}))
 }
 
 func submitSong(db *bolt.DB) http.Handler {
@@ -114,5 +118,29 @@ func submitSong(db *bolt.DB) http.Handler {
 			return nil
 		})
 		fmt.Fprintf(w, "Form submitted")
+	})
+}
+
+func uploadSongs(db *bolt.DB) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		r.ParseMultipartForm(32 << 20)
+
+		m := r.MultipartForm
+		files := m.File["uploadfiles"]
+
+		for i := range files {
+			file, err := files[i].Open()
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
+			b, _ := ioutil.ReadAll(file)
+			song := conversion.OpenSongSong(b)
+
+			conversion.ImportSong(db, song)
+
+			defer file.Close()
+		}
 	})
 }

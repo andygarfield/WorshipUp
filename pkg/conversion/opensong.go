@@ -11,13 +11,13 @@ import (
 )
 
 // OpenSongSet is an XML encoded set that is used by OpenSong
-type openSongSet []byte
+type OpenSongSet []byte
 
 // OpenSongSong is an XML encoded song that is used by OpenSong
-type openSongSong []byte
+type OpenSongSong []byte
 
 // Convert converts an OpenSongSet into a worshipup.ServiceOrder
-func (set openSongSet) Convert() (worshipup.SetOrder, error) {
+func (set OpenSongSet) Convert() (worshipup.SetOrder, error) {
 	b := bytes.NewBuffer(set)
 	doc, err := xmlquery.Parse(b)
 	if err != nil {
@@ -57,7 +57,7 @@ func (set openSongSet) Convert() (worshipup.SetOrder, error) {
 }
 
 // Convert converts an OpenSongSong into a worshipup.SongJSON
-func (song openSongSong) Convert() (worshipup.SongJSON, error) {
+func (song OpenSongSong) Convert() (worshipup.SongJSON, error) {
 	getTagInnerText := func(doc *xmlquery.Node, tag string) string {
 		return xmlquery.Find(doc, "//"+tag)[0].InnerText()
 	}
@@ -87,11 +87,20 @@ func (song openSongSong) Convert() (worshipup.SongJSON, error) {
 					break
 				}
 			}
-
 			convertedBody += "!" + section + "\n"
+		} else if len(rs) >= 3 && line[:3] == " ||" {
+			convertedBody += "\n"
+		} else if len(rs) >= 3 && line[:3] == "---" {
+			convertedBody += "\n"
 		} else {
 			convertedBody += string(rs) + "\n"
 		}
+	}
+
+	// After conversion, scrub data for any illegal characters
+	convertedBody, err = worshipup.ScrubUserData(convertedBody)
+	if err != nil {
+		return worshipup.SongJSON{}, err
 	}
 
 	// Get the other values that don't need much conversion

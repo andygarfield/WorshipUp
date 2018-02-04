@@ -29,7 +29,7 @@
 
         let xhttp = new XMLHttpRequest();
         
-        xhttp.open("POST", "/songsubmit");
+        xhttp.open("POST", "/songsubmit/");
         xhttp.onload = () => {
           if (xhttp.response.substr(0, 5) != "Error") {
             this.$store.dispatch("getSongList");

@@ -3,13 +3,13 @@
     <div id="settings">
       <span
         class="close"
-        @click="toggleSettings"
-        >
+        @click="toggleSettings">
           &times;
         </span>
-      <h2>Import songs:</h2>
-      <input id="input-files" type="file" multiple>
-      <input @click="submitSongs" type="submit">
+      <h2>Import OpenSong songs:</h2>
+      <form id="songupload" enctype="multipart/form-data" method="post">
+        <input id="input-files" name="uploadfiles" type="file" multiple @change="submitSongs()">
+      </form>
     </div>
   </div>
 </template>
@@ -20,10 +20,21 @@ import { mapState } from 'vuex'
 export default {
   methods: {
     toggleSettings () {
-      this.$store.commit("toggleSettings")
+      this.$store.commit("toggleSettings");
     },
     submitSongs () {
-      console.log(document.getElementById("input-files"))
+      // console.log(document.getElementById("input-files").target)
+      var form = document.forms.namedItem("songupload");
+      let fData = new FormData(form);
+
+      let xhr = new XMLHttpRequest();
+      xhr.open("POST", "/upload/" , true);
+      xhr.onload = (res) => {
+        this.$store.dispatch("getSongList");
+        this.$store.commit("toggleSettings");
+      }
+
+      xhr.send(fData)
     }
   }
 }
