@@ -13,9 +13,9 @@ import (
 	"github.com/boltdb/bolt"
 )
 
-// SetConverter takes the input set and converts it to a worshipup.ServiceOrder
+// SetConverter takes the input set and converts it to a worshipup.ServiceList
 type SetConverter interface {
-	Convert() (worshipup.SetOrder, error)
+	Convert() (worshipup.SetList, error)
 }
 
 // SongConverter takes the input song and converts it to a worshipup.SongJSON
@@ -24,16 +24,16 @@ type SongConverter interface {
 }
 
 // ImportSet takes a ServiceConverter and imports it into the app's database in the "Sets" bucket
-func ImportSet(db *bolt.DB, s SetConverter) {
-	db.Update(func(tx *bolt.Tx) error {
-		b, _ := tx.CreateBucketIfNotExists([]byte("Sets"))
+func ImportSet(db *bolt.DB, s SetConverter) error {
+	err := db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("Sets"))
 		set, err := s.Convert()
 		if err != nil {
-			fmt.Println(err)
+			return err
 		}
 		m, err := json.Marshal(set)
 		if err != nil {
-			fmt.Println(err)
+			return err
 		}
 
 		date := set.Date.Format("20060102")
@@ -41,25 +41,29 @@ func ImportSet(db *bolt.DB, s SetConverter) {
 
 		return nil
 	})
+
+	return err
 }
 
 // ImportSong takes a SongConverter and imports it into the app's database in the "Songs" bucket
-func ImportSong(db *bolt.DB, s SongConverter) {
-	db.Update(func(tx *bolt.Tx) error {
-		b, _ := tx.CreateBucketIfNotExists([]byte("Songs"))
+func ImportSong(db *bolt.DB, s SongConverter) error {
+	err := db.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket([]byte("Songs"))
 		song, err := s.Convert()
 		if err != nil {
-			fmt.Println(err)
+			return err
 		}
 		m, err := json.Marshal(song)
 		if err != nil {
-			fmt.Println(err)
+			return err
 		}
 
 		err = b.Put([]byte(song.Title), m)
 
 		return nil
 	})
+
+	return err
 }
 
 // ImportSetDir imports all of the sets in a directory into the app's database

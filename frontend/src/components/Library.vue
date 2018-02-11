@@ -66,6 +66,10 @@
   overflow: auto;
 }
 
+#library-elements li {
+  cursor: pointer;
+}
+
 #add-button {
   display: flex;
   flex-grow: 1;

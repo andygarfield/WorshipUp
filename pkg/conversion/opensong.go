@@ -16,12 +16,12 @@ type OpenSongSet []byte
 // OpenSongSong is an XML encoded song that is used by OpenSong
 type OpenSongSong []byte
 
-// Convert converts an OpenSongSet into a worshipup.ServiceOrder
-func (set OpenSongSet) Convert() (worshipup.SetOrder, error) {
+// Convert converts an OpenSongSet into a worshipup.ServiceList
+func (set OpenSongSet) Convert() (worshipup.SetList, error) {
 	b := bytes.NewBuffer(set)
 	doc, err := xmlquery.Parse(b)
 	if err != nil {
-		return worshipup.SetOrder{}, err
+		return worshipup.SetList{}, err
 	}
 
 	var (
@@ -35,7 +35,7 @@ func (set OpenSongSet) Convert() (worshipup.SetOrder, error) {
 			if a.Name.Local == "name" {
 				date, err = time.Parse("Worship2006_01_02", a.Value)
 				if err != nil {
-					return worshipup.SetOrder{}, err
+					return worshipup.SetList{}, err
 				}
 			}
 		}
@@ -50,7 +50,7 @@ func (set OpenSongSet) Convert() (worshipup.SetOrder, error) {
 		}
 	}
 
-	return worshipup.SetOrder{
+	return worshipup.SetList{
 		Date:  date,
 		Songs: songs,
 	}, nil

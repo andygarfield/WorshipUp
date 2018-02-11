@@ -83,7 +83,7 @@ export function decodeSong(sj: SongJSON) {
                             expanded = "Verse " + line.slice(2);
                             break;
                         case "c":
-                            expanded = "Chorus";
+                            expanded = "Chorus " + line.slice(2);
                             break;
                         case "b":
                             expanded = "Bridge";

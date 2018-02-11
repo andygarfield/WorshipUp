@@ -52,36 +52,42 @@
 
 <style>
   @media (min-width: 0px) {
-    #main {
+    #main,
+    #library,
+    #song-display {
       display: flex;
       flex-direction: column;
+    }
+
+    #header-menu,
+    #app-body {
+      display: flex;
+      flex-direction: row;
+      flex-basis: auto;
+    }
+
+    #main {
       height: 100%;
     }
 
     #header-menu {
-      display: flex;
-      flex-direction: row;
+      z-index: 200;
       height: 15%;
-      flex-basis: auto;
     }
 
     #app-body {
-      display: flex;
-      flex-direction: row;
+      z-index: 1;
       height: 85%;
-      flex-basis: auto;
     }
     
     #library {
-      display: flex;
-      flex-direction: column;
       width: 25%;
       background: #ddd;
+      animation-name: animatetop;
+      animation-duration: 0.4s
     }
 
     #song-display {
-      display: flex;
-      flex-direction: column;
       padding: 10px;
       flex-basis: 50%;
       overflow: auto;

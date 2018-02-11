@@ -36,9 +36,11 @@ func main() {
 	})
 
 	http.Handle("/songlist/", getSongList(db))
+	http.Handle("/setlists/", getSetLists(db))
 	http.Handle("/song/", songHandler(db))
 	http.Handle("/songsubmit/", submitSong(db))
-	http.Handle("/upload/", uploadSongs(db))
+	http.Handle("/songupload/", uploadSongs(db))
+	// http.Handle("/setupload/", uploadSets(db))
 	http.Handle("/", gziphandler.GzipHandler(http.FileServer(http.Dir("./frontend"))))
 
 	fmt.Println("Starting server on port 8080")
@@ -62,6 +64,26 @@ func getSongList(db *bolt.DB) http.Handler {
 		sort.Strings(songList)
 
 		outJSON, _ := json.Marshal(songList)
+		w.Write(outJSON)
+	}))
+}
+
+func getSetLists(db *bolt.DB) http.Handler {
+	return gziphandler.GzipHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		setLists := [][]byte{}
+
+		db.View(func(tx *bolt.Tx) error {
+			b := tx.Bucket([]byte("Sets"))
+			c := b.Cursor()
+
+			for _, setData := c.First(); setData != nil; _, setData = c.Next() {
+				setLists = append(setLists, setData)
+			}
+
+			return nil
+		})
+
+		outJSON, _ := json.Marshal(setLists)
 		w.Write(outJSON)
 	}))
 }
@@ -138,7 +160,10 @@ func uploadSongs(db *bolt.DB) http.Handler {
 			b, _ := ioutil.ReadAll(file)
 			song := conversion.OpenSongSong(b)
 
-			conversion.ImportSong(db, song)
+			err = conversion.ImportSong(db, song)
+			if err != nil {
+				fmt.Fprintf(w, fmt.Sprint(err))
+			}
 
 			defer file.Close()
 		}

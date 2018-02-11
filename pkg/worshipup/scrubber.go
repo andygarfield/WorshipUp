@@ -8,7 +8,7 @@ import (
 )
 
 var songTitleRegex, _ = regexp.Compile(`[a-zA-Z\s\,()]+`)
-var songBodyRegex, _ = regexp.Compile(`^[!;. ]([0-9A-Za-z .,\-'!?;"’#/])*$`)
+var songBodyRegex, _ = regexp.Compile(`^[!;. ]([0-9A-Za-z .,\-–'!?;"’“”#/])*$`)
 
 // ScrubUserTitle takes an input title passes it through a white-list to see if it's valid
 func ScrubUserTitle(s string) (string, error) {

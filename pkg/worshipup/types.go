@@ -11,8 +11,8 @@ type SongJSON struct {
 	CCLI         int    `json:"ccli,omitempty"`
 }
 
-// SetOrder holds a date and order in a service
-type SetOrder struct {
+// SetList holds a date and order in a service
+type SetList struct {
 	Date  time.Time
 	Songs []string
 }
