@@ -57,6 +57,7 @@
     }
 
     #main-wrapper {
+      min-height:0;
       display: flex;
       flex: 1;
       flex-direction: row;

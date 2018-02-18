@@ -1,5 +1,5 @@
 <template>
-  <div id="library-wrapper">
+  <section id="library-wrapper">
     <div id="library-top-menu">
       <div
       id="add-button"
@@ -12,18 +12,16 @@
       @click="toggleSettings()" />
     </div>
     <div id="library-elements">
-      <!-- <ul id="library-list"> -->
-        <div
-          class="list-element"
-          v-for="(songTitle, itemIndex) of songList"
-          :key="itemIndex"
-          @click="loadSong(songTitle)"
-        >
-          {{ songTitle }}
-        </div>
-      <!-- </ul> -->
+      <div
+        class="list-element"
+        v-for="(songTitle, itemIndex) of songList"
+        :key="itemIndex"
+        @click="loadSong(songTitle)"
+      >
+        {{ songTitle }}
+      </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -66,8 +64,6 @@
 }
 
 #library-top-menu {
-  flex-basis: 30px;
-
   display: flex;
   flex-direction: row;
 }
@@ -98,12 +94,4 @@
   padding: 5px;
 }
 
-#library-list{
-  display: flex;
-  flex-direction: column;
-}
-
-#library-elements li {
-  cursor: pointer;
-}
 </style>
