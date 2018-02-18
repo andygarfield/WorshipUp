@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="service-wrapper">
       Testing
   </div>
 </template>
@@ -11,5 +11,8 @@ export default {
 </script>
 
 <style>
-
+  #service-wrapper {
+    flex-basis: 25%;
+    background: #ddd;
+  }
 </style>

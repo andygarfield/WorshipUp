@@ -1,16 +1,15 @@
 <template>
-  <div id="main">
+  <div id="app">
     <Settings v-if="settingsOn"></Settings>
-    <HeaderMenu id="header-menu">
+    <HeaderMenu>
     </HeaderMenu>
-    <div id="app-body">
+    <main id="main-wrapper">
       <Library
-        id="library"
         @newSong="newSong">
       </Library>
-      <SongDisplay id="song-display"></SongDisplay>
-      <ServiceOrder id="service-order"></ServiceOrder>
-    </div>
+      <SongDisplay></SongDisplay>
+      <ServiceOrder></ServiceOrder>
+    </main>
   </div>
 </template>
 
@@ -51,55 +50,25 @@
 </script>
 
 <style>
-  @media (min-width: 0px) {
-    #main,
-    #library,
-    #song-display {
+  /* @media (min-width: 0px) { */
+    #app {
       display: flex;
       flex-direction: column;
     }
 
-    #header-menu,
-    #app-body {
+    #main-wrapper {
       display: flex;
+      flex: 1;
       flex-direction: row;
-      flex-basis: auto;
-    }
-
-    #main {
-      height: 100%;
-    }
-
-    #header-menu {
-      z-index: 200;
-      height: 15%;
-    }
-
-    #app-body {
-      z-index: 1;
-      height: 85%;
-    }
-    
-    #library {
-      width: 25%;
-      background: #ddd;
-      animation-name: animatetop;
-      animation-duration: 0.4s
-    }
-
-    #song-display {
-      padding: 10px;
-      flex-basis: 50%;
-      overflow: auto;
     }
 
     #service-order {
       flex-basis: 25%;
       background: #ddd;
     }
-  }
+  /* } */
 
-  @media (min-width: 690px) {
+  /* @media (min-width: 690px) {
     
-  }
+  } */
 </style>

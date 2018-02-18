@@ -58,9 +58,12 @@
 </script>
 
 <style>
-  h1 {
-    margin-top: 0px;
-    margin-bottom: 5px;
+  #song-title {
+    margin: 0 0 5px;
+  }
+
+  #action-icons {
+    display: flex;
   }
 
   #song-body {
@@ -84,16 +87,12 @@
 
   .modify-btn {
     cursor: pointer;
-    height: 15px;
-    width: 15px;
+    height: 22px;
+    width: 22px;
     padding: 2px;
     border: 2px solid;
     border-radius: 3px;
-  }
-
-  .action-icons {
-    display: flex;
-    flex-direction: row;
+    margin-right: 3px;
   }
 
   .edit-btn {

@@ -94,7 +94,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
   #settings-background {
     display: flex;
     position: fixed;

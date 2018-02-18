@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <header id="header-wrapper">
     <div id="header-content">
       <h1 id="mode-header">Plan</h1>
-      <p>Service Date</p>
+      <p>Service Date:</p>
       <Datepicker
         id="date-picker"
         v-model="serviceDate"
@@ -10,17 +10,7 @@
       </Datepicker>
     </div>
     <div id="mode-toggle">Present</div>
-
-    <!-- <div
-      id="datesetter-background"
-      v-if="selectingDate">
-      <div
-        id="datesetter">
-        <Datepicker v-model="serviceDate" v-on:closed="toggleSelectingDate"></Datepicker>
-      </div>
-    </div> -->
-
-  </div>
+  </header>
 </template>
 
 <script>
@@ -49,29 +39,33 @@
   }
 </script>
 
-<style scoped>
+<style>
+  #header-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    background: #bbb;
+    padding: 0.5rem;
+  }
+
   p {
     margin: 5px 0px;
   }
 
-  #header-menu {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-around;
-    align-items: stretch;
-    overflow: hidden;
-    background: #bbb;
+  h1 {
+    margin: 0px 8px;
   }
 
   #header-content {
     display: flex;
     flex-direction: column;
     align-items: center;
-    flex-grow: 9;
+    flex: 9;
   }
 
   #mode-toggle {
-    flex-grow: 1;
+    flex: 1;
     text-align: center;
   }
 

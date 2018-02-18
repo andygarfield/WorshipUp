@@ -1,5 +1,5 @@
 <template>
-  <component :is="mode" id="display-area"></component>
+  <component :is="mode" id="display-wrapper"></component>
 </template>
 
 <script>
@@ -21,5 +21,9 @@
 </script>
 
 <style>
-
+  #display-wrapper {
+    flex-basis: 50%;
+    padding: 10px;
+    overflow: auto;
+  }
 </style>
