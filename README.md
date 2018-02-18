@@ -30,7 +30,7 @@ The easiest method is to use Docker, though you can install it your base system.
 ### Docker
 First, install [Docker](https://www.docker.com/)
 
-Now just download and run the container
+Now just download and run the image
 ```bash
 docker run -ti -p 8080:8080 andygarfield/worshipup
 ```
