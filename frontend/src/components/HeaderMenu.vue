@@ -5,6 +5,7 @@
       <p>Service Date:</p>
       <Datepicker
         id="date-picker"
+        :highlighted="highlighted"
         v-model="serviceDate"
         v-on:closed="toggleSelectingDate">
       </Datepicker>
@@ -12,6 +13,7 @@
     <div id="mode-toggle">Present</div>
   </header>
 </template>
+
 
 <script>
   import Datepicker from 'vuejs-datepicker';
@@ -21,6 +23,9 @@
     components: {
       Datepicker: Datepicker,
     },
+    created () {
+      this.getSetLists();
+    },
     computed: {
       serviceDate: {
         get () {
@@ -29,12 +34,26 @@
         set (value) {
           this.$store.commit('setServiceDate', value)
         },
+      },
+      highlighted () {
+        let parseDateString = function(dateString) {
+          let year = dateString.slice(0, 4);
+          let month = dateString.slice(4, 6) - 1;
+          let day = dateString.slice(6, 8);
+          return new Date(year, month, day);
+        };
+        return {
+          dates: Object.keys(this.$store.state.setLists).map(el => parseDateString(el))
+        }
       }
     },
     methods: {
       toggleSelectingDate () {
         this.selectingDate = !this.selectingDate
-      }
+      },
+      getSetLists () {
+        return this.$store.dispatch("getSetLists")
+      },
     },
   }
 </script>

@@ -118,6 +118,7 @@ export default {
     padding: 20px;
     border: 1px solid #888;
     width: 40%;
+    height: fit-content;
   }
 
 .close {

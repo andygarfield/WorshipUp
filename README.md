@@ -28,7 +28,7 @@ Mostly copy OpenSong in organization abilities, but have a central server so tha
 The easiest method is to use Docker, though you can install it your base system.
 
 ### Docker
-First, install [Docker](https://www.docker.com/)
+First, install [Docker](https://www.docker.com/community-edition)
 
 Now just download and run the image
 ```bash

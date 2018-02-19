@@ -3,6 +3,9 @@
   "version": "0.1",
   "dependencies": {
     "css-loader": "^0.28.7",
+    "install": "^0.10.4",
+    "npm": "^5.6.0",
+    "sortablejs": "^1.7.0",
     "ts-loader": "^3.2.0",
     "typescript": "^2.6.2",
     "uglify-js": "^3.2.2",
@@ -10,6 +13,7 @@
     "vue": "^2.5.9",
     "vue-loader": "^13.5.0",
     "vue-template-compiler": "^2.5.9",
+    "vuedraggable": "^2.16.0",
     "vuejs-datepicker": "^0.9.25",
     "vuex": "^3.0.1",
     "webpack": "^3.10.0"

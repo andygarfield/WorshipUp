@@ -1,8 +1,15 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import App from './App.vue'
+import Vue from 'vue';
+import Vuex from 'vuex';
+import App from './App.vue';
 
 Vue.use(Vuex)
+
+interface setLists {
+    [simpleDate: string]: {
+        Date: string,
+        Songs: string[],
+    }
+}
 
 const store = new Vuex.Store({
     state: {
@@ -10,8 +17,20 @@ const store = new Vuex.Store({
         serviceDate: new Date(),
         songData: "",
         songList: [],
-        setLists: [],
+        setLists: <setLists> {},
         settingsOn: false,
+    },
+    getters: {
+        stringDate: state => {
+            return dateToString(state.serviceDate);
+        },
+        setSongs: (state, getters) => {
+            if (!state.setLists[getters.stringDate]) {
+                return [];
+            } else {
+                return state.setLists[getters.stringDate].Songs;
+            }
+        }
     },
     mutations: {
         switchMode (state, newMode) {
@@ -28,6 +47,10 @@ const store = new Vuex.Store({
         },
         saveSetLists (state, setLists) {
             state.setLists = setLists;
+        },
+        updateSetList (state, updatedSet) {
+            // console.log(updatedSet.stringDate);
+            state.setLists[updatedSet.stringDate].Songs = updatedSet.setList;
         },
         toggleSettings (state) {
             state.settingsOn = !state.settingsOn;
@@ -71,3 +94,27 @@ new Vue ({
     store,
     render: h => h(App)
 })
+
+// Helper functions
+function dateToString(date: Date) {
+    let leftPad = function (str: string, len: number) {
+        let sl = str.length;
+        if (sl < len) {
+            let newString = "";
+
+            let diff = len - sl;
+            for (let i = 0; i < diff; i++) {
+                newString += "0";
+            }
+            return newString += str;
+        }
+        return str;
+    }
+
+    let year = leftPad(date.getFullYear().toString(), 2);
+    let month = leftPad((date.getMonth()+1).toString(), 2);
+    let day = leftPad(date.getDate().toString(), 2);
+
+
+    return year + month + day;
+}

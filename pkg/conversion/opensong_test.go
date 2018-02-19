@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"testing"
+
+	"github.com/andygarfield/worshipup/pkg/worshipup"
 )
 
 func TestConvertOpenSongSet(t *testing.T) {
@@ -13,28 +15,32 @@ func TestConvertOpenSongSet(t *testing.T) {
 		sb []byte
 	)
 
-	for _, r := range readers {
+	wus := worshipup.SetList{}
+
+	for _, r := range readers[:1] {
 		sb, _ = ioutil.ReadAll(r)
-		oss := openSongSet(sb)
-		oss.Convert()
+		oss := OpenSongSet(sb)
+		wus, _ = oss.Convert()
 	}
+
+	fmt.Println(wus)
 }
 
-func TestConvertOpenSongSong(t *testing.T) {
-	readers := loopThroughDir("./testdata/OpenSongSong")
+// func TestConvertOpenSongSong(t *testing.T) {
+// 	readers := loopThroughDir("./testdata/OpenSongSong")
 
-	var (
-		sb []byte
-	)
+// 	var (
+// 		sb []byte
+// 	)
 
-	for _, r := range readers {
-		sb, _ = ioutil.ReadAll(r)
-		oss := openSongSong(sb)
-		_, err := oss.Convert()
-		if err != nil {
-			fmt.Println(err)
-		}
+// 	for _, r := range readers {
+// 		sb, _ = ioutil.ReadAll(r)
+// 		oss := OpenSongSong(sb)
+// 		_, err := oss.Convert()
+// 		if err != nil {
+// 			fmt.Println(err)
+// 		}
 
-		// fmt.Println(song)
-	}
-}
+// 		// fmt.Println(song)
+// 	}
+// }

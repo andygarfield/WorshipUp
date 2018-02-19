@@ -6,7 +6,9 @@ interface SongJSON {
     ccli?: string
 }
 
-export function decodeSong(sj: SongJSON) {
+export { decodeSong, SongJSON };
+
+function decodeSong(sj: SongJSON) {
     // Return a blank string if there is no song data yet
     if (!sj) {
         return ""
