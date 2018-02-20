@@ -12,7 +12,7 @@ Mostly copy OpenSong in organization abilities, but have a central server so tha
 
 
 ## To-do
-- [ ] Finalize format for transmitting song data
+- [x] Finalize format for transmitting song data
 - [ ] Fix OpenSong importing for songs that have numbered lyric lines (ex. Are You Washed)
 - [x] Implement method for floating chords above the lyrics they go with
 - [x] Style the page a little
@@ -20,7 +20,7 @@ Mostly copy OpenSong in organization abilities, but have a central server so tha
 - [ ] Make the presentation feature
 - [ ] Implement accounts and authorization
 - [x] Make way to edit songs
-- [ ] Create way to make set lists for upcoming services
+- [x] Create way to make set lists for upcoming services
 - [ ] Implement remote control app for phones
 
 
