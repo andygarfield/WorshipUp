@@ -127,6 +127,6 @@ People who are setting up the system can choose from a few different configurati
 The desire is to have the ability to smoothly upgrade to a more complicated configuration if a church's needs grow.
 
 ## General Architechture
-![Architecture Chart](https://raw.githubusercontent.com/andygarfield/WorshipUp/master/architecture.svg)
+![Architecture Chart](https://github.com/andygarfield/WorshipUp/blob/master/architecture.svg)
 
 [source](https://www.lucidchart.com/invitations/accept/c311a15e-7224-4a86-ba2f-b82a73967ef2)
