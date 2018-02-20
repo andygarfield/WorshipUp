@@ -9,6 +9,7 @@ RUN mkdir /go /go/src /go/pkg /go/bin && \
     go get github.com/andygarfield/worshipup/...
 
 WORKDIR /go/src/github.com/andygarfield/worshipup
-RUN yarn
+RUN yarn && \
+    yarn run prod
 
-ENTRYPOINT ["yarn", "run", "test"]
+ENTRYPOINT ["./dataserver"]

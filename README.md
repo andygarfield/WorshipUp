@@ -67,7 +67,7 @@ yarn install
 
 To run the application
 ```bash
-yarn run test
+yarn run dev
 ```
 
 Then go to http://localhost:8080
