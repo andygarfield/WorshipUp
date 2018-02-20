@@ -1,6 +1,6 @@
 FROM node:latest
 ENV GOPATH /go
-ENV PATH="${PATH}:${GOPATH}/bin"
+ENV PATH "${PATH}:${GOPATH}/bin"
 
 RUN mkdir /go /go/src /go/pkg /go/bin && \
     apt-get update && \
