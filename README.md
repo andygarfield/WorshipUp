@@ -52,7 +52,7 @@ brew install go
 
 Go get this repo
 ```bash
-go get github.com/andygarfield/worshipup/...
+go get github.com/andygarfield/worshipup
 ```
 
 Navigate to the repo directory
@@ -92,7 +92,7 @@ choco install golang
 
 Go get this repo
 ```powershell
-go get github.com/andygarfield/worshipup/...
+go get github.com/andygarfield/worshipup
 ```
 
 Navigate to the repo directory
