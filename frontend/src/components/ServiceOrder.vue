@@ -11,7 +11,7 @@
       </transition-group>
     </draggable>
     <div
-      id="save-button"
+      id="save-set"
       class="button"
       v-if="modified"
       @click="saveSet">
@@ -58,9 +58,10 @@ export default {
       xhttp.open("POST", "/setsubmit/");
       xhttp.onload = () => {
         if (xhttp.response.substr(0, 5) != "Error") {
-          alert(xhttp.response)
+          this.$store.dispatch('getSetLists')
+          this.modified = false;
         } else {
-          alert(xhttp.response);
+          alert(xhttp.response)
         }
       }
 
@@ -94,13 +95,12 @@ export default {
 
   .set-item {
     background: rgb(145, 145, 145);
-    font-size: 1.1em;
     padding: 4px 4px 7px;
     margin: 5px;
     box-shadow: 0 2px 0 0 rgba(84, 86, 88, .06);
   }
 
-  #save-button {
+  #save-set {
     background-color: #007bff;
     border-color: #007bff;
     box-shadow: 0 2px 0 0 rgba(65, 160, 255, 0.603);

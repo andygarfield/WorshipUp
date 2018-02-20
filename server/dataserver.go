@@ -7,6 +7,8 @@ import (
 	"log"
 	"net/http"
 	"sort"
+	"strings"
+	"time"
 
 	"github.com/andygarfield/worshipup/pkg/conversion"
 
@@ -39,6 +41,7 @@ func main() {
 	http.Handle("/setlists/", getSetLists(db))
 	http.Handle("/song/", songHandler(db))
 	http.Handle("/songsubmit/", submitSong(db))
+	http.Handle("/setsubmit/", submitSet(db))
 	http.Handle("/songupload/", uploadSongs(db))
 	http.Handle("/setupload/", uploadSets(db))
 	http.Handle("/", gziphandler.GzipHandler(http.FileServer(http.Dir("./frontend"))))
@@ -143,6 +146,38 @@ func submitSong(db *bolt.DB) http.Handler {
 			return nil
 		})
 		fmt.Fprintf(w, "Form submitted")
+	})
+}
+
+func submitSet(db *bolt.DB) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		setOrder := strings.Split(r.PostFormValue("set"), ",")
+		date, _ := time.Parse("20060102", r.PostFormValue("date"))
+
+		sj := worshipup.SetList{
+			Date:  date,
+			Songs: setOrder,
+		}
+
+		slJSON, _ := json.Marshal(sj)
+
+		fmt.Println(setOrder)
+		err := db.Update(func(tx *bolt.Tx) error {
+			b := tx.Bucket([]byte("Sets"))
+			err := b.Put([]byte(r.PostFormValue("date")), slJSON)
+			if err != nil {
+				return err
+			}
+
+			return nil
+		})
+		if err != nil {
+			w.Header().Set("Status Code", "500")
+			fmt.Fprintf(w, fmt.Sprint(err))
+			return
+		}
+
+		fmt.Fprintf(w, "Submitted")
 	})
 }
 

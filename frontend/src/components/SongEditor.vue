@@ -1,7 +1,7 @@
 <template>
   <div id="edit-song">
     <div id="form-area">
-      <button id="save-button" type="submit" form="edit-song" @click="save">
+      <button id="save-song" type="submit" form="edit-song" @click="save">
         Save
       </button>
       <input id="edit-title" placeholder="Title" :value="songTitle">
@@ -67,7 +67,7 @@
     box-sizing: border-box;
   }
 
-  #save-button {
+  #save-song {
     background: lightgreen;
     border-radius: 4px 4px 0 0;
     padding: 10px;
