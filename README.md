@@ -38,7 +38,7 @@ docker run -ti -p 8080:8080 andygarfield/worshipup
 Then go to http://localhost:8080
 
 ### macOS
-A few prerequisites. Recommended to use [Homebrew](https://brew.sh/).
+There are some dependencies that need to be installed. It's recommended to use [Homebrew](https://brew.sh/).
 
 Install Yarn (and thus Node.js)
 ```bash
@@ -52,7 +52,7 @@ brew install go
 
 Go get this repo
 ```bash
-go get github.com/andygarfield/worshipup
+go get github.com/andygarfield/worshipup/...
 ```
 
 Navigate to the repo directory
@@ -62,7 +62,7 @@ cd ~/go/src/github.com/andygarfield/worshipup
 
 Install node packages
 ```bash
-yarn install
+yarn
 ```
 
 To run the application
@@ -72,6 +72,50 @@ yarn run dev
 
 Then go to http://localhost:8080
 
+### Windows
+There are some dependencies that need to be installed. It's recommended to use [chocolatey](https://chocolatey.org).
+
+Install node.js
+```powershell
+choco install nodejs.install
+```
+
+Install Yarn
+```powershell
+choco install yarn
+```
+
+Install Go
+```powershell
+choco install golang
+```
+
+Go get this repo
+```powershell
+go get github.com/andygarfield/worshipup/...
+```
+
+Navigate to the repo directory
+```powershell
+cd ~\go\src\github.com\andygarfield\worshipup
+```
+
+Install node packages
+```powershell
+yarn
+```
+
+Build the front-end
+```powershell
+yarn run prod
+```
+
+Run the server
+```powershell
+worshipup
+```
+
+Then go to http://localhost:8080
 
 ## Configurations
 People who are setting up the system can choose from a few different configurations. These are ordered simplest to most complex.
@@ -83,6 +127,6 @@ People who are setting up the system can choose from a few different configurati
 The desire is to have the ability to smoothly upgrade to a more complicated configuration if a church's needs grow.
 
 ## General Architechture
-![Architecture Chart](./architecture.svg)
+![Architecture Chart](https://raw.githubusercontent.com/andygarfield/WorshipUp/master/architecture.svg)
 
 [source](https://www.lucidchart.com/invitations/accept/c311a15e-7224-4a86-ba2f-b82a73967ef2)

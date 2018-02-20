@@ -1,5 +1,6 @@
 FROM node:latest
 ENV GOPATH /go
+ENV PATH="${PATH}:${GOPATH}/bin"
 
 RUN mkdir /go /go/src /go/pkg /go/bin && \
     apt-get update && \
@@ -12,4 +13,4 @@ WORKDIR /go/src/github.com/andygarfield/worshipup
 RUN yarn && \
     yarn run prod
 
-ENTRYPOINT ["./dataserver"]
+ENTRYPOINT ["worshipup"]

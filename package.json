@@ -19,7 +19,7 @@
     "webpack": "^3.10.0"
   },
   "scripts": {
-    "dev": "webpack --config dev.config.js & go build ./server/* && ./dataserver",
-    "prod": "webpack --config prod.config.js & go build ./server/*"
+    "dev": "webpack --config dev.config.js & go install && worshipup",
+    "prod": "webpack --config prod.config.js"
   }
 }
