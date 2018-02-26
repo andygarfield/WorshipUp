@@ -23,75 +23,75 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+  import { mapState } from 'vuex'
 
-export default {
-  
-  methods: {
-    toggleSettings () {
-      this.$store.commit("toggleSettings");
-    },
-    submitSongs () {
-      var form = document.forms.namedItem("songupload");
-      let fData = new FormData(form);
-
-      let xhr = new XMLHttpRequest();
-      xhr.open("POST", "/songupload/" , true);
-      xhr.onload = (res) => {
-        this.$store.dispatch("getSongList");
+  export default {
+    
+    methods: {
+      toggleSettings () {
         this.$store.commit("toggleSettings");
-      }
+      },
+      submitSongs () {
+        var form = document.forms.namedItem("songupload");
+        let fData = new FormData(form);
 
-      xhr.send(fData)
-    },
-    submitSets () {
-      var form = document.forms.namedItem("setupload");
-      let fData = new FormData(form);
-
-      let xhr = new XMLHttpRequest();
-      xhr.open("POST", "/setupload/" , true);
-      xhr.onload = (res) => {
-        this.$store.dispatch("getSetLists");
-        this.$store.commit("toggleSettings");
-      }
-
-      xhr.send(fData)
-    }
-  },
-  directives: {
-    // Stolen with love from https://jsfiddle.net/Linusborg/Lx49LaL8/
-    'click-outside': {
-      bind: function(el, binding, vNode) {
-        // Provided expression must evaluate to a function.
-        if (typeof binding.value !== 'function') {
-        	const compName = vNode.context.name
-          let warn = `[Vue-click-outside:] provided expression '${binding.expression}' is not a function, but has to be`
-          if (compName) { warn += `Found in component '${compName}'` }
-          
-          console.warn(warn)
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "/songupload/" , true);
+        xhr.onload = (res) => {
+          this.$store.dispatch("getSongList");
+          this.$store.commit("toggleSettings");
         }
-        // Define Handler and cache it on the element
-        const bubble = binding.modifiers.bubble
-        const handler = (e) => {
-          if (bubble || (!el.contains(e.target) && el !== e.target)) {
-          	binding.value(e)
+
+        xhr.send(fData)
+      },
+      submitSets () {
+        var form = document.forms.namedItem("setupload");
+        let fData = new FormData(form);
+
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "/setupload/" , true);
+        xhr.onload = (res) => {
+          this.$store.dispatch("getSetLists");
+          this.$store.commit("toggleSettings");
+        }
+
+        xhr.send(fData)
+      }
+    },
+    directives: {
+      // Stolen with love from https://jsfiddle.net/Linusborg/Lx49LaL8/
+      'click-outside': {
+        bind: function(el, binding, vNode) {
+          // Provided expression must evaluate to a function.
+          if (typeof binding.value !== 'function') {
+            const compName = vNode.context.name
+            let warn = `[Vue-click-outside:] provided expression '${binding.expression}' is not a function, but has to be`
+            if (compName) { warn += `Found in component '${compName}'` }
+            
+            console.warn(warn)
           }
+          // Define Handler and cache it on the element
+          const bubble = binding.modifiers.bubble
+          const handler = (e) => {
+            if (bubble || (!el.contains(e.target) && el !== e.target)) {
+              binding.value(e)
+            }
+          }
+          el.__vueClickOutside__ = handler
+
+          // add Event Listeners
+          document.addEventListener('click', handler)
+        },
+        
+        unbind: function(el, binding) {
+          // Remove Event Listeners
+          document.removeEventListener('click', el.__vueClickOutside__)
+          el.__vueClickOutside__ = null
+
         }
-        el.__vueClickOutside__ = handler
-
-        // add Event Listeners
-        document.addEventListener('click', handler)
-			},
-      
-      unbind: function(el, binding) {
-        // Remove Event Listeners
-        document.removeEventListener('click', el.__vueClickOutside__)
-        el.__vueClickOutside__ = null
-
       }
-    }
-  },
-}
+    },
+  }
 </script>
 
 <style>

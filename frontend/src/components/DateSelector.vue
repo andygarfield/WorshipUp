@@ -58,28 +58,28 @@
 </template>
 
 <script>
-export default {
-  name: "DateSelector",
-  methods: {
-    columnUp(column) {
-      switch (column) {
-        case "month":
-          this.month++
-          break;
-      
-        default:
-          break;
+  export default {
+    name: "DateSelector",
+    methods: {
+      columnUp(column) {
+        switch (column) {
+          case "month":
+            this.month++
+            break;
+        
+          default:
+            break;
+        }
+      }
+    },
+    data () {
+      return {
+        month: 1,
+        day: 1,
+        year: 2018,
       }
     }
-  },
-  data () {
-    return {
-      month: 1,
-      day: 1,
-      year: 2018,
-    }
   }
-}
 </script>
 
 <style scoped>

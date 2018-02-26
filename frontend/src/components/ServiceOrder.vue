@@ -21,55 +21,55 @@
 </template>
 
 <script>
-import Vue from 'vue'
-import draggable from 'vuedraggable'
+  import Vue from 'vue'
+  import draggable from 'vuedraggable'
 
-export default {
-  components: {
-    draggable,
-  },
-  computed: {
-    setSongs: {
-      get () {
-        return this.$store.getters.setSongs;
+  export default {
+    components: {
+      draggable,
+    },
+    computed: {
+      setSongs: {
+        get () {
+          return this.$store.getters.setSongs;
+        },
+        set (value) {
+          this.modified = true;
+          let updatedSet = {
+            stringDate: this.stringDate,
+            setList: value,
+          }
+          this.$store.commit('updateSetList', updatedSet)
+        }
       },
-      set (value) {
-        this.modified = true;
-        let updatedSet = {
-          stringDate: this.stringDate,
-          setList: value,
-        }
-        this.$store.commit('updateSetList', updatedSet)
+      stringDate () {
+        return this.$store.getters.stringDate;
       }
     },
-    stringDate () {
-      return this.$store.getters.stringDate;
-    }
-  },
-  data () {
-    return {
-      modified: false
-    }
-  },
-  methods: {
-    saveSet () {
-      let xhttp = new XMLHttpRequest();
-      
-      xhttp.open("POST", "/setsubmit/");
-      xhttp.onload = () => {
-        if (xhttp.response.substr(0, 5) != "Error") {
-          this.$store.dispatch('getSetLists')
-          this.modified = false;
-        } else {
-          alert(xhttp.response)
-        }
+    data () {
+      return {
+        modified: false
       }
+    },
+    methods: {
+      saveSet () {
+        let xhttp = new XMLHttpRequest();
+        
+        xhttp.open("POST", "/setsubmit/");
+        xhttp.onload = () => {
+          if (xhttp.response.substr(0, 5) != "Error") {
+            this.$store.dispatch('getSetLists')
+            this.modified = false;
+          } else {
+            alert(xhttp.response)
+          }
+        }
 
-      xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-      xhttp.send("date=" + this.stringDate  + "&" + "set=" + encodeURIComponent(this.setSongs));
-    },
+        xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhttp.send("date=" + this.stringDate  + "&" + "set=" + encodeURIComponent(this.setSongs));
+      },
+    }
   }
-}
 </script>
 
 <style>
