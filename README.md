@@ -4,9 +4,8 @@
 Mostly copy OpenSong in organization abilities, but have a central server so that multiple people can work on the worship service throughout the week.
 
 ## Application Features
-* Make set lists for the week
-  * Ability to choose songs already in the database or to add new songs
-* Edit songs
+* Make set lists for different services
+* Manage worship songs
 * Print songs for set list
 * Present song slides (maybe for musicians as well with an iPad or iPhone)
 

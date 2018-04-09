@@ -24,24 +24,18 @@
       Datepicker: Datepicker,
     },
     created () {
-      this.getSetLists();
+      this.allSets();
     },
     computed: {
       serviceDate: {
         get () {
-          return this.$store.state.serviceDate
+          return this.$store.state.displayedSetList.Date
         },
         set (value) {
           this.$store.commit('setServiceDate', value)
         },
       },
       highlighted () {
-        let parseDateString = function(dateString) {
-          let year = dateString.slice(0, 4);
-          let month = dateString.slice(4, 6) - 1;
-          let day = dateString.slice(6, 8);
-          return new Date(year, month, day);
-        };
         return {
           dates: Object.keys(this.$store.state.setLists).map(el => parseDateString(el))
         }
@@ -51,11 +45,19 @@
       toggleSelectingDate () {
         this.selectingDate = !this.selectingDate
       },
-      getSetLists () {
-        return this.$store.dispatch("getSetLists")
+      allSets () {
+        return this.$store.dispatch("getAllSets")
       },
     },
   }
+
+
+  function parseDateString(dateString) {
+    let year = dateString.slice(0, 4);
+    let month = dateString.slice(4, 6) - 1;
+    let day = dateString.slice(6, 8);
+    return new Date(year, month, day);
+  };
 </script>
 
 <style>

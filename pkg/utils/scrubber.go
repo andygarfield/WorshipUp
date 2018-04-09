@@ -1,4 +1,4 @@
-package worshipup
+package utils
 
 import (
 	"errors"
@@ -8,20 +8,20 @@ import (
 )
 
 var songTitleRegex, _ = regexp.Compile(`[a-zA-Z\s\,()]+`)
-var songBodyRegex, _ = regexp.Compile(`^[!;. ]([0-9A-Za-z .,\-–'!?;"’“”#/])*$`)
+var songBodyRegex, _ = regexp.Compile(`^[!;. ]([0-9A-Za-z ._,\-–'!?;"’“”#/])*$`)
 
 // ScrubUserTitle takes an input title passes it through a white-list to see if it's valid
 func ScrubUserTitle(s string) (string, error) {
-	s = strings.Replace(s, "\r", "\n", -1)
+	s = strings.Replace(s, "\r\n", "\n", -1)
 	if songTitleRegex.Match([]byte(s)) {
 		return s, nil
 	}
 	return "", errors.New("Error: Invalid title")
 }
 
-// ScrubUserData takes an input song body and passes it through a white-list to see if it's valid
-func ScrubUserData(s string) (string, error) {
-	s = strings.Replace(s, "\r", "\n", -1)
+// ScrubUserBody takes an input song body and passes it through a white-list to see if it's valid
+func ScrubUserBody(s string) (string, error) {
+	s = strings.Replace(s, "\r\n", "\n", -1)
 	s = fmt.Sprintf("%s", s)
 
 	lines := strings.Split(s, "\n")

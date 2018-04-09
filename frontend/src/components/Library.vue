@@ -10,15 +10,15 @@
       src="/static/settings.svg"
       id="settings-button"
       @click="toggleSettings()" />
-    </div>
+    </div> 
     <div id="library-elements">
       <div
         class="list-element"
-        v-for="(songTitle, itemIndex) of songList"
-        :key="itemIndex"
-        @click="loadSong(songTitle)"
+        v-for="(item, sKey) of songList"
+        :key="sKey"
+        @click="getSong(item)"
       >
-        {{ songTitle }}
+        {{ item.song.title }}
       </div>
     </div>
   </section>
@@ -26,28 +26,31 @@
 
 <script>
   import { mapState } from "vuex"
+  import { IndexedSong } from "../main"
 
   export default {
     name: "SongList",
-    computed: mapState({
-      songList: state => state.songList,
-    }),
+    computed: {
+      songList ()  {
+        return this.$store.state.songList;
+      },
+    },
     created () {
-      this.getSongList();
+      return this.$store.dispatch("getSongList");
     },
     methods: {
-      loadSong (songTitle) {
-        return this.$store.dispatch("loadSong", songTitle)
+      getSong (songItem) {
+        return this.$store.dispatch("getSong", songItem);
       },
+      // changeIndex (songIdx) {
+      //   return this.$store.commit("changeSongIndex", songIdx)
+      // },
       newSong () {
-        this.$store.commit("changeSongData", `{"title": "", "body": ""}`)
-        return this.$store.commit("switchMode", "edit")
-      },
-      getSongList () {
-        return this.$store.dispatch("getSongList")
+        this.$store.commit("makeSongBlank");
+        return this.$store.commit("switchMode", "edit");
       },
       toggleSettings () {
-        return this.$store.commit("toggleSettings")
+        return this.$store.commit("toggleSettings");
       },
     },
   }
@@ -90,8 +93,11 @@
   display: flex;
   flex-direction: column;
   overflow: auto;
+  margin-top: 5px;
+}
 
-  padding: 5px;
+.list-element {
+  padding: 0 5px;
 }
 
 </style>

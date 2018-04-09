@@ -32,17 +32,20 @@
         this.$store.commit("toggleSettings");
       },
       submitSongs () {
+        this.$store.dispatch("addSong", {
+
+        })
         var form = document.forms.namedItem("songupload");
         let fData = new FormData(form);
 
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", "/songupload/" , true);
-        xhr.onload = (res) => {
-          this.$store.dispatch("getSongList");
-          this.$store.commit("toggleSettings");
-        }
+        // let xhr = new XMLHttpRequest();
+        // xhr.open("POST", "/songupload/" , true);
+        // xhr.onload = (res) => {
+        //   this.$store.dispatch("allSongs");
+        //   this.$store.commit("toggleSettings");
+        // }
 
-        xhr.send(fData)
+        // xhr.send(fData)
       },
       submitSets () {
         var form = document.forms.namedItem("setupload");
@@ -51,11 +54,11 @@
         let xhr = new XMLHttpRequest();
         xhr.open("POST", "/setupload/" , true);
         xhr.onload = (res) => {
-          this.$store.dispatch("getSetLists");
+          this.$store.dispatch("allSets");
           this.$store.commit("toggleSettings");
         }
 
-        xhr.send(fData)
+        xhr.send(fData);
       }
     },
     directives: {
@@ -64,29 +67,29 @@
         bind: function(el, binding, vNode) {
           // Provided expression must evaluate to a function.
           if (typeof binding.value !== 'function') {
-            const compName = vNode.context.name
-            let warn = `[Vue-click-outside:] provided expression '${binding.expression}' is not a function, but has to be`
-            if (compName) { warn += `Found in component '${compName}'` }
+            const compName = vNode.context.name;
+            let warn = `[Vue-click-outside:] provided expression '${binding.expression}' is not a function, but has to be`;
+            if (compName) { warn += `Found in component '${compName}'`; }
             
-            console.warn(warn)
+            console.warn(warn);
           }
           // Define Handler and cache it on the element
-          const bubble = binding.modifiers.bubble
+          const bubble = binding.modifiers.bubble;
           const handler = (e) => {
             if (bubble || (!el.contains(e.target) && el !== e.target)) {
-              binding.value(e)
+              binding.value(e);
             }
           }
-          el.__vueClickOutside__ = handler
+          el.__vueClickOutside__ = handler;
 
           // add Event Listeners
-          document.addEventListener('click', handler)
+          document.addEventListener('click', handler);
         },
         
         unbind: function(el, binding) {
           // Remove Event Listeners
-          document.removeEventListener('click', el.__vueClickOutside__)
-          el.__vueClickOutside__ = null
+          document.removeEventListener('click', el.__vueClickOutside__);
+          el.__vueClickOutside__ = null;
 
         }
       }

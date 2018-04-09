@@ -1,60 +1,58 @@
 <template>
   <div>
-    <h1 id="song-title">{{ songTitle }}</h1>
+    <h1 v-if="notBlank" id="song-title">{{ song.title }}</h1>
     <div id="action-icons">
       <img
-        v-if="songBody"
-        @click="addToService(songTitle)"
+        v-if="notBlank"
+        @click="addToService(song.title)"
         src="/static/plus.svg"
         class="modify-btn servadd-btn">
       <img
-        v-if="songBody"
+        v-if="notBlank"
         @click="switchMode('edit')"
         src="/static/edit.svg"
         class="modify-btn edit-btn">
       <img
-        v-if="songBody"
+        v-if="notBlank"
         @click="deleteSong"
         src="/static/delete.svg"
         class="modify-btn delete-btn">
     </div>
-    <div id="song-body" v-html="songBody"></div>
+    <div
+      id="song-body"
+      v-html="songBody"
+      v-if="notBlank">
+    </div>
   </div>
   
 </template>
 
 <script>
+  import Vue from 'vue'
   import { mapState } from 'vuex'
   import { decodeSong } from '../decode'
 
-  export default {
+  export default Vue.extend({
     name: "SongReader",
     computed: mapState({
-      songTitle: state => {
-        return state.songData.title
+      song: state => state.displayedSong.song,
+      songBody: state => decodeSong(state.displayedSong.song),
+      notBlank(state) {
+        return state.displayedSong.i != -1;
       },
-      songBody: state => {
-        return decodeSong(state.songData)
-      }
     }),
     methods: {
       switchMode (newMode) {
-        this.$store.commit("switchMode", "edit")
+        this.$store.commit("switchMode", "edit");
       },
       addToService () {
-        this.$store.commit("addToService", this.songTitle)
+        this.$store.commit("addToService", this.song.title);
       },
-      deleteSong () {
-        let xreq = new XMLHttpRequest();
-        xreq.onload = () => {
-          this.$store.dispatch("getSongList");
-          this.$store.commit("changeSongData", "");
-        }
-        xreq.open("DELETE", "/song/" + this.songTitle, true);
-        xreq.send();
-      }
+      deleteSong (id) {
+        this.$store.dispatch("deleteSong", this.song.id);
+      },
     }
-  }
+  })
 </script>
 
 <style>

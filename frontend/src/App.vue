@@ -14,12 +14,12 @@
 </template>
 
 <script>
-  import HeaderMenu from './components/HeaderMenu.vue'
-  import Library from './components/Library.vue'
-  import SongDisplay from './components/SongDisplay.vue'
-  import ServiceOrder from './components/ServiceOrder.vue'
-  import Settings from  './components/Settings.vue'
-  import decodeSong from './decode.ts'
+  import HeaderMenu from './components/HeaderMenu.vue';
+  import Library from './components/Library.vue';
+  import SongDisplay from './components/SongDisplay.vue';
+  import ServiceOrder from './components/ServiceOrder.vue';
+  import Settings from  './components/Settings.vue';
+  import decodeSong from './decode.ts';
   import { mapState } from 'vuex';
 
   export default {

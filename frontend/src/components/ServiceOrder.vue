@@ -1,9 +1,9 @@
 <template>
   <div id="service-wrapper">
-    <draggable v-model="setSongs">
+    <draggable v-model="setListSongs">
       <transition-group>
         <div
-          v-for="(song, songIndex) in setSongs"
+          v-for="(song, songIndex) in setListSongs"
           :key="songIndex"
           class="button set-item">
           {{ song }}
@@ -14,7 +14,7 @@
       id="save-set"
       class="button"
       v-if="modified"
-      @click="saveSet">
+      @click="updateSet">
         Save
     </div>
   </div>
@@ -29,9 +29,9 @@
       draggable,
     },
     computed: {
-      setSongs: {
-        get () {
-          return this.$store.getters.setSongs;
+      setListSongs: {
+        get (id) {
+          return this.$store.setListSongs;
         },
         set (value) {
           this.modified = true;
@@ -52,13 +52,14 @@
       }
     },
     methods: {
-      saveSet () {
+      updateSet () {
+        this.$store.updatedSet()
         let xhttp = new XMLHttpRequest();
         
         xhttp.open("POST", "/setsubmit/");
         xhttp.onload = () => {
           if (xhttp.response.substr(0, 5) != "Error") {
-            this.$store.dispatch('getSetLists')
+            this.$store.dispatch('allSets')
             this.modified = false;
           } else {
             alert(xhttp.response)
@@ -66,7 +67,7 @@
         }
 
         xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhttp.send("date=" + this.stringDate  + "&" + "set=" + encodeURIComponent(this.setSongs));
+        xhttp.send("date=" + this.stringDate  + "&" + "set=" + encodeURIComponent(this.setListSongs));
       },
     }
   }

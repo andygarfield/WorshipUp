@@ -2,6 +2,7 @@ const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
+  mode: 'production',
   entry: './frontend/src/main.ts',
   output: {
     path: path.resolve(__dirname, 'frontend', 'dist'),

@@ -1,0 +1,61 @@
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+# The query type represents all of the entry points into our object graph
+type Query {
+    # Gets a song by ID
+    song(id: ID!): Song
+    # Gets a set by ID
+    set(id: ID!): Set
+    # Gets all songs
+    allsongs: [Song]
+    # Gets all sets
+    allsets: [Set]
+}
+
+# The mutation type represents all the operations we can do to our data
+type Mutation {
+    # Adds a new song
+    addsong(song: SongInput!): Song
+    # Changes a song
+    updatesong(id: ID!, song: SongInput!): Song
+    # Deletes a song
+    deletesong(id: ID!): String
+    
+    # Adds a new set
+    addset(set: SetInput!): Set
+    # Changes a set
+    updateset(id: ID!, set: SetInput!): Set
+    # Deletes a set
+    deleteset(id: ID!): String
+}
+
+type Song {
+    id: ID!
+    title: String!
+	body: String!
+	presentation: String
+	author: String
+	ccli: Int
+}
+
+input SongInput {
+    title: String!
+    body: String!
+    presentation: String
+    author: String
+    ccli: Int
+}
+
+type Set {
+    id: ID!
+    date: Int!
+    songs: [Song]
+}
+
+input SetInput {
+    date: Int!
+    songs: [ID]
+}

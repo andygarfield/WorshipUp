@@ -9,35 +9,42 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/andygarfield/worshipup/pkg/worshipup"
+	"github.com/andygarfield/worshipup/pkg/types"
+	"github.com/andygarfield/worshipup/pkg/utils"
 	"github.com/boltdb/bolt"
 )
 
 // SetConverter takes the input set and converts it to a worshipup.ServiceList
+// This songs in the set are required to have the song exist in the database,
+// otherwise Convert() fails
 type SetConverter interface {
-	Convert() (worshipup.SetList, error)
+	Convert(db *bolt.DB) (types.SetList, error)
 }
 
 // SongConverter takes the input song and converts it to a worshipup.SongJSON
 type SongConverter interface {
-	Convert() (worshipup.SongJSON, error)
+	Convert() (types.SongJSON, error)
 }
 
-// ImportSet takes a ServiceConverter and imports it into the app's database in the "Sets" bucket
+// ImportSet takes a ServiceConverter and imports it into the app's database
+// in the "Sets" bucket
 func ImportSet(db *bolt.DB, s SetConverter) error {
 	err := db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("Sets"))
-		set, err := s.Convert()
+		set, err := s.Convert(db)
 		if err != nil {
 			return err
 		}
+
+		id, _ := b.NextSequence()
+		set.ID = id
+
 		m, err := json.Marshal(set)
 		if err != nil {
 			return err
 		}
 
-		date := set.Date.Format("20060102")
-		err = b.Put([]byte(date), m)
+		err = b.Put(utils.EncodeUint64(id), m)
 
 		return nil
 	})
@@ -45,20 +52,26 @@ func ImportSet(db *bolt.DB, s SetConverter) error {
 	return err
 }
 
-// ImportSong takes a SongConverter and imports it into the app's database in the "Songs" bucket
+// ImportSong takes a SongConverter and imports it into the app's database in
+// the "Songs" bucket
 func ImportSong(db *bolt.DB, s SongConverter) error {
+	// fmt.Println("Got here.")
 	err := db.Update(func(tx *bolt.Tx) error {
 		b := tx.Bucket([]byte("Songs"))
 		song, err := s.Convert()
 		if err != nil {
-			return err
+			return fmt.Errorf("Problem with conversion: %v", err)
 		}
+
+		id, _ := b.NextSequence()
+		song.ID = id
+
 		m, err := json.Marshal(song)
 		if err != nil {
 			return err
 		}
 
-		err = b.Put([]byte(song.Title), m)
+		err = b.Put(utils.EncodeUint64(id), m)
 
 		return nil
 	})
@@ -87,9 +100,14 @@ func ImportSongDir(db *bolt.DB, dir, songType string) error {
 	readers := loopThroughDir(dir)
 	if strings.ToLower(songType) == "opensong" {
 		for _, r := range readers {
-			b, _ := ioutil.ReadAll(r)
-
-			ImportSong(db, OpenSongSong(b))
+			b, err := ioutil.ReadAll(r)
+			if err != nil {
+				fmt.Println(err)
+			}
+			err = ImportSong(db, OpenSongSong(b))
+			if err != nil {
+				fmt.Println(err)
+			}
 		}
 	} else {
 		return fmt.Errorf("%s is not implimented as in import type at this time", songType)
